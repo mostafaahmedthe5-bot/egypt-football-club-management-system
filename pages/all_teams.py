@@ -1,10 +1,10 @@
-from nicegui import ui
+from nicegui import ui, app
 import database as db
 
 
-def content(club_id=None):
+def content():
     # =========================================================
-    # جلب كل الأندية
+    # جلب الأندية
     # =========================================================
 
     clubs = db.fetch_all(
@@ -96,7 +96,7 @@ def content(club_id=None):
             .club-card {
                 width: 285px;
                 min-height: 245px;
-                background: rgba(255,255,255,.98);
+                background: rgba(255,255,255,.97);
                 border: 1px solid #e2e8f0;
                 border-radius: 24px;
                 box-shadow:
@@ -105,6 +105,7 @@ def content(club_id=None):
                     transform .22s ease,
                     box-shadow .22s ease,
                     border-color .22s ease;
+                cursor: pointer;
                 position: relative;
                 overflow: hidden;
             }
@@ -126,10 +127,10 @@ def content(club_id=None):
             }
 
             .club-card:hover {
-                transform: translateY(-6px);
+                transform: translateY(-8px);
                 box-shadow:
-                    0 20px 45px rgba(15,23,42,.12);
-                border-color: #cbd5e1;
+                    0 20px 45px rgba(15,23,42,.13);
+                border-color: #f59e0b;
             }
 
             .club-logo {
@@ -213,17 +214,21 @@ def content(club_id=None):
                 with ui.column().classes('gap-1'):
 
                     ui.label(
-                        '⚽ جميع الأندية'
+                        '⚽ أندية الدوري المصري الممتاز'
                     ).classes(
-                        'text-3xl md:text-4xl '
-                        'font-black text-white'
+                        'text-3xl md:text-4xl font-black text-white'
                     )
 
                     ui.label(
-                        'نظرة عامة على الأندية الموجودة في النظام'
+                        'اختر النادي للوصول إلى صفحة تسجيل الدخول'
                     ).classes(
-                        'text-white/75 '
-                        'text-base md:text-lg mt-1'
+                        'text-white/75 text-base md:text-lg mt-1'
+                    )
+
+                    ui.label(
+                        '2026/27'
+                    ).classes(
+                        'text-amber-400 font-black text-lg mt-2'
                     )
 
                 with ui.element('div').classes(
@@ -232,7 +237,9 @@ def content(club_id=None):
                     'border border-white/20 '
                     'flex items-center justify-center'
                 ):
-                    ui.label('⚽').classes('text-5xl')
+                    ui.label('⚽').classes(
+                        'text-5xl'
+                    )
 
         # =====================================================
         # Summary
@@ -253,18 +260,21 @@ def content(club_id=None):
                 )
 
                 ui.label(
-                    'الأندية الموجودة'
+                    'الأندية'
                 ).classes(
                     'section-title'
                 )
 
-            ui.label(
-                f'{len(clubs)} نادي'
-            ).classes(
+            with ui.element('div').classes(
                 'bg-white border border-slate-200 '
-                'text-slate-700 px-4 py-2 '
-                'rounded-full shadow-sm font-bold'
-            )
+                'px-4 py-2 rounded-full shadow-sm'
+            ):
+
+                ui.label(
+                    f'{len(clubs)} نادي'
+                ).classes(
+                    'text-slate-700 font-bold'
+                )
 
         # =====================================================
         # Clubs
@@ -286,12 +296,11 @@ def content(club_id=None):
                 ui.label(
                     'لا توجد أندية'
                 ).classes(
-                    'text-2xl font-black '
-                    'text-slate-600 mt-5'
+                    'text-2xl font-black text-slate-600 mt-5'
                 )
 
                 ui.label(
-                    'لا توجد بيانات في جدول Club'
+                    'لم يتم تسجيل أي نادي في قاعدة البيانات حتى الآن'
                 ).classes(
                     'text-slate-400 text-sm mt-2'
                 )
@@ -299,17 +308,16 @@ def content(club_id=None):
         else:
 
             with ui.row().classes(
-                'w-full justify-center '
-                'flex-wrap gap-6'
+                'w-full justify-center flex-wrap gap-6'
             ):
 
                 for club in clubs:
 
+                    club_id = club['Id']
                     club_name_ar = (
                         club['ClubNameAR']
                         or 'بدون اسم'
                     )
-
                     club_name_en = (
                         club['ClubNameEN']
                         or ''
@@ -325,14 +333,22 @@ def content(club_id=None):
                         or 0
                     )
 
-                    # =================================================
-                    # Card - View Only
-                    # =================================================
+                    def select_club(
+                        selected_club_id=club_id
+                    ):
+                        app.storage.user.update({
+                            'selected_club_id': selected_club_id
+                        })
+
+                        ui.navigate.to('/login')
 
                     with ui.element(
                         'div'
                     ).classes(
                         'club-card'
+                    ).on(
+                        'click',
+                        select_club
                     ):
 
                         with ui.column().classes(
@@ -340,9 +356,9 @@ def content(club_id=None):
                             'justify-center p-6'
                         ):
 
-                            # =========================================
+                            # =================================
                             # Logo
-                            # =========================================
+                            # =================================
 
                             with ui.element(
                                 'div'
@@ -355,9 +371,9 @@ def content(club_id=None):
                                     'text-4xl'
                                 )
 
-                            # =========================================
+                            # =================================
                             # Name
-                            # =========================================
+                            # =================================
 
                             ui.label(
                                 club_name_ar
@@ -373,17 +389,15 @@ def content(club_id=None):
                                     'club-name-en mt-1'
                                 )
 
-                            # =========================================
+                            # =================================
                             # Statistics
-                            # =========================================
+                            # =================================
 
                             with ui.row().classes(
-                                'items-center '
-                                'justify-center '
+                                'items-center justify-center '
                                 'gap-2 mt-5'
                             ):
 
-                                # Teams
                                 with ui.element(
                                     'div'
                                 ).classes(
@@ -394,7 +408,6 @@ def content(club_id=None):
                                         'items-center '
                                         'justify-center gap-2'
                                     ):
-
                                         ui.icon(
                                             'groups'
                                         ).classes(
@@ -404,7 +417,6 @@ def content(club_id=None):
                                         with ui.column().classes(
                                             'items-start gap-0'
                                         ):
-
                                             ui.label(
                                                 str(team_count)
                                             ).classes(
@@ -415,10 +427,10 @@ def content(club_id=None):
                                             ui.label(
                                                 'Team'
                                             ).classes(
-                                                'text-slate-400 text-xs'
+                                                'text-slate-400 '
+                                                'text-xs'
                                             )
 
-                                # Players
                                 with ui.element(
                                     'div'
                                 ).classes(
@@ -429,7 +441,6 @@ def content(club_id=None):
                                         'items-center '
                                         'justify-center gap-2'
                                     ):
-
                                         ui.icon(
                                             'person'
                                         ).classes(
@@ -439,7 +450,6 @@ def content(club_id=None):
                                         with ui.column().classes(
                                             'items-start gap-0'
                                         ):
-
                                             ui.label(
                                                 str(player_count)
                                             ).classes(
@@ -450,28 +460,29 @@ def content(club_id=None):
                                             ui.label(
                                                 'Player'
                                             ).classes(
-                                                'text-slate-400 text-xs'
+                                                'text-slate-400 '
+                                                'text-xs'
                                             )
 
-                            # =========================================
-                            # View Only
-                            # =========================================
+                            # =================================
+                            # Login
+                            # =================================
 
                             with ui.row().classes(
                                 'items-center gap-2 mt-5'
                             ):
 
                                 ui.icon(
-                                    'visibility'
+                                    'login'
                                 ).classes(
-                                    'text-slate-400 text-sm'
+                                    'text-amber-500 text-sm'
                                 )
 
                                 ui.label(
-                                    'عرض فقط'
+                                    'اضغط للدخول'
                                 ).classes(
-                                    'text-slate-400 '
-                                    'text-xs font-bold'
+                                    'text-slate-500 '
+                                    'text-sm font-bold'
                                 )
 
         # =====================================================
