@@ -66,28 +66,11 @@ def content():
                 width: 100%;
                 overflow: hidden;
 
-                background:
-                    radial-gradient(
-                        circle at 10% 10%,
-                        rgba(30, 58, 138, .10),
-                        transparent 30%
-                    ),
-                    radial-gradient(
-                        circle at 90% 15%,
-                        rgba(245, 158, 11, .12),
-                        transparent 28%
-                    ),
-                    radial-gradient(
-                        circle at 50% 100%,
-                        rgba(15, 23, 42, .07),
-                        transparent 35%
-                    ),
-                    linear-gradient(
-                        135deg,
-                        #f8fafc 0%,
-                        #f1f5f9 50%,
-                        #e8eef5 100%
-                    );
+                
+                    background:
+    radial-gradient(circle at 10% 10%, rgba(214,194,163,.18), transparent 30%),
+    radial-gradient(circle at 90% 20%, rgba(184,159,122,.14), transparent 30%),
+    linear-gradient(135deg, #F7F3EC 0%, #EDE3D3 100%);
             }
 
             /* =================================================

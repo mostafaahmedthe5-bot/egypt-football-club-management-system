@@ -158,16 +158,22 @@ CREATE TABLE "TeamCategory" (
 );
 
 CREATE TABLE "Tournament" (
-	"Id" INTEGER PRIMARY KEY,
-	"TournamentNameAR" TEXT,
-	"TournamentNameEN" TEXT,
-	"CreatedBy" TEXT,
-	"CreatedOn" DATETIME,
-	"UpdatedBy" TEXT,
-	"UpdatedOn" DATETIME,
-	"DeletedBy" TEXT,
-	"DeletedOn" DATETIME,
-	"ToouramentDate" DATE
+    "Id" INTEGER PRIMARY KEY,
+    "TournamentNameAR" TEXT,
+    "TournamentNameEN" TEXT,
+    "TournamentStartDate" DATE,
+    "TournamentEndDate" DATE,
+    "TournamentLocation" TEXT,
+    "TournamentCountryCity" TEXT,
+    "TournamentType" TEXT,
+    "SportId" INTEGER,
+    "CreatedBy" TEXT,
+    "CreatedOn" DATETIME,
+    "UpdatedBy" TEXT,
+    "UpdatedOn" DATETIME,
+    "DeletedBy" TEXT,
+    "DeletedOn" DATETIME,
+    FOREIGN KEY ("SportId") REFERENCES "Sport" ("Id")
 );
 
 CREATE TABLE "T-shirtNumber" (
@@ -463,3 +469,46 @@ INSERT OR IGNORE INTO "Sport" ("Id", "SportNameAR", "SportNameEN") VALUES
 (18, 'الإسكواش', 'Squash'),
 (19, 'الريشة الطائرة', 'Badminton'),
 (20, 'الدراجات', 'Cycling');
+INSERT OR IGNORE INTO "TeamCategory" ("Id", "TeamCategoryNameAR", "TeamCategoryNameEN") VALUES
+(1, 'الفريق الأول', 'First Team'),
+(2, 'فريق الشباب', 'Youth Team'),
+(3, 'فريق الناشئين', 'Junior Team'),
+(4, 'فريق البراعم', 'Junior Academy'),
+(5, 'فريق الأكاديمية', 'Academy Team'),
+(6, 'فريق السيدات', 'Women''s Team'),
+(7, 'فريق الرجال', 'Men''s Team');
+
+INSERT OR IGNORE INTO "Club"
+(
+    "Id",
+    "ClubNameAR",
+    "ClubNameEN",
+    "CreatedBy",
+    "CreatedOn"
+)
+
+VALUES
+(1, 'الأهلي', 'Al Ahly SC', 'SYSTEM', datetime('now')),
+(2, 'الزمالك', 'Zamalek SC', 'SYSTEM', datetime('now')),
+(3, 'بيراميدز', 'Pyramids FC', 'SYSTEM', datetime('now')),
+(4, 'المصري', 'Al Masry SC', 'SYSTEM', datetime('now')),
+(5, 'الإسماعيلي', 'Ismaily SC', 'SYSTEM', datetime('now'));
+
+INSERT INTO Team
+(
+    TeamAR,
+    TeamEN,
+    Teamcatgoryid,
+    Clubid,
+    Sportid,
+    CreatedBy,
+    CreatedOn
+)
+VALUES
+('الفريق الأول لكرة القدم', 'Football First Team', 1, 1, 1, 'SYSTEM', datetime('now')),
+('فريق الشباب لكرة القدم', 'Football Youth Team', 2, 1, 1, 'SYSTEM', datetime('now')),
+('فريق الناشئين لكرة القدم', 'Football Junior Team', 3, 1, 1, 'SYSTEM', datetime('now')),
+('فريق البراعم لكرة القدم', 'Football Junior Academy Team', 4, 1, 1, 'SYSTEM', datetime('now')),
+('فريق الأكاديمية لكرة القدم', 'Football Academy Team', 5, 1, 1, 'SYSTEM', datetime('now')),
+('فريق السيدات لكرة القدم', 'Women Football Team', 6, 1, 1, 'SYSTEM', datetime('now')),
+('فريق الرجال لكرة القدم', 'Men Football Team', 7, 1, 1, 'SYSTEM', datetime('now'));

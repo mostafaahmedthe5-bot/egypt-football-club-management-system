@@ -1,12 +1,14 @@
 from nicegui import app, ui
 from pages import (
     dashboard,
-    login,
-    medical,
-    players,
-    select_club,
     teams,
+    players,
+    login,
+    select_club,
     teams_buttons,
+    medical,
+    tournaments,
+    memberships,
 )
 
 # =========================================================
@@ -17,9 +19,10 @@ NAV_ITEMS = [
     ('الفرق', 'groups', '/teams'),
     ('اللاعبين', 'person', '/players'),
     ('الكشف الطبي', 'medical_services', '/medical'),
+    ('البطولات', 'emoji_events', '/tournaments'),
+    ('العضويات', 'card_membership', '/memberships'),
     ('كل الأندية', 'sports_soccer', '/all_teams'),
 ]
-
 
 # =========================================================
 # دالة التحقق من الصلاحيات والتحويل
@@ -53,8 +56,10 @@ def apply_layout(title: str, page_content_func):
 
     # --- الهيدر العلوي ---
     with ui.header().classes(
-        'w-full bg-slate-900 text-white shadow-md border-b border-slate-800 px-4 lg:px-6 py-3'
-    ):
+    'w-full bg-[#F7F3EC]/10 backdrop-blur-lg '
+    'text-slate-900 border-b border-[#B49A5A]/10 '
+    'px-4 lg:px-6 py-3'
+):
         with ui.row().classes('w-full items-center justify-between gap-4 flex-wrap'):
 
             # الهوية واللوجو
@@ -66,10 +71,11 @@ def apply_layout(title: str, page_content_func):
 
                 with ui.column().classes('gap-0'):
                     ui.label('نظام إدارة الأندية الرياضية').classes(
-                        'text-base md:text-lg font-black text-white leading-tight'
+                        'text-base md:text-lg font-black text-slate-900 leading-tight'
                     )
+
                     ui.label('Sports Club Management System').classes(
-                        'text-[9px] md:text-[10px] text-slate-400 tracking-widest'
+                        'text-[9px] md:text-[10px] text-slate-500 tracking-widest'
                     )
 
             # شريط التنقل الرئيسي (مع تمييز الصفحة الحالية)
@@ -77,10 +83,10 @@ def apply_layout(title: str, page_content_func):
                 for label, icon, path in NAV_ITEMS:
                     is_active = title == label
                     active_classes = (
-                        'bg-slate-800 text-amber-400 font-bold'
-                        if is_active
-                        else 'text-white hover:bg-slate-800/80'
-                    )
+                    'bg-[#B49A5A] text-black font-bold'
+                    if is_active
+                    else 'text-black hover:bg-[#E8DCC8]'
+                )
 
                     ui.button(
                         label,
@@ -93,7 +99,7 @@ def apply_layout(title: str, page_content_func):
             # منطقة المستخدم وزر الخروج
             with ui.row().classes('items-center gap-2'):
                 with ui.element('div').classes(
-                    'flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5'
+                    'flex items-center gap-2 bg-[#B89F7A] border border-slate-700 rounded-xl px-3 py-1.5'
                 ):
                     with ui.element('div').classes(
                         'w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center'
@@ -164,6 +170,25 @@ def players_page():
 @ui.page('/medical')
 def medical_page():
     apply_layout('الكشف الطبي', medical.content)
+    
+    
+    
+    
+@ui.page('/memberships')
+def memberships_page():
+    apply_layout(
+        'العضويات',
+        memberships.content
+    )
+
+
+
+@ui.page('/tournaments')
+def tournaments_page():
+    apply_layout(
+        'البطولات',
+        tournaments.content
+    )
 
 
 @ui.page('/all_teams')

@@ -37,20 +37,43 @@ def content():
             .clubs-page {
                 min-height: 100vh;
                 background:
-                    radial-gradient(circle at 10% 10%, rgba(59,130,246,.08), transparent 30%),
-                    radial-gradient(circle at 90% 20%, rgba(245,158,11,.08), transparent 30%),
-                    linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+    radial-gradient(circle at 10% 10%, rgba(214,194,163,.18), transparent 30%),
+    radial-gradient(circle at 90% 20%, rgba(184,159,122,.14), transparent 30%),
+    linear-gradient(135deg, #F7F3EC 0%, #EDE3D3 100%);
+
+            .clubs-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+                width: 100%;
+                max-width: 1280px;
             }
 
-            .club-btn {
-                width: 250px !important;
-                height: 200px !important;
-                background: white !important;
-                border: 1px solid #e2e8f0 !important;
-                border-radius: 24px !important;
-                box-shadow: 0 8px 30px rgba(15,23,42,.07) !important;
-                transition: all .25s ease !important;
+            @media (max-width: 1024px) {
+                .clubs-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
             }
+
+            @media (max-width: 768px) {
+                .clubs-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .clubs-grid {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+            }
+.club-btn {
+    width: 100% !important;
+    height: 235px !important;
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 24px !important;
+    box-shadow: 0 8px 30px rgba(15,23,42,.07) !important;
+}
 
             .club-btn:hover {
                 transform: translateY(-8px) !important;
@@ -106,21 +129,15 @@ def content():
             with ui.element('div').classes(
                 'w-20 h-20 rounded-3xl bg-slate-900 flex items-center justify-center shadow-xl mb-5'
             ):
-                ui.label('⚽').classes('text-4xl')
-
-            ui.label('اختر ناديك').classes(
-                'hero-title text-4xl md:text-5xl font-black mb-2'
-            )
-
-            ui.label('اختر النادي للدخول إلى نظام إدارة النادي').classes(
-                'text-slate-500 text-lg md:text-xl font-medium'
-            )
+                 ui.image(
+                'https://image.pngaaa.com/856/449856-middle.png'
+            ).classes('w-20 h-20 object-contain')
 
             with ui.row().classes(
                 'items-center gap-2 mt-4 bg-white px-5 py-2 rounded-full shadow-sm border border-slate-200'
             ):
                 ui.icon('groups').classes('text-amber-500')
-                ui.label(f'{len(clubs)} نادي متاح').classes(
+                ui.label(f'{len(clubs)}    نادي ').classes(
                     'text-slate-700 font-bold'
                 )
 
@@ -134,9 +151,7 @@ def content():
                     'text-xl font-bold text-slate-600 mt-4'
                 )
         else:
-            with ui.row().classes(
-                'w-full max-w-7xl justify-center flex-wrap gap-6'
-            ):
+            with ui.element('div').classes('clubs-grid'):
                 for club in clubs:
                     c_id = club['Id']
                     c_name = club['ClubNameAR']

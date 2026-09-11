@@ -131,13 +131,8 @@ def content(club_id=None):
 
                 padding: 28px 30px;
 
-                background:
-                    linear-gradient(
-                        135deg,
-                        #0f172a 0%,
-                        #172554 55%,
-                        #1e3a8a 100%
-                    );
+                background:#7A9E7E;
+                   
 
                 border:
                     1px solid
@@ -890,19 +885,10 @@ def content(club_id=None):
                                 'teams-header-club'
                             )
 
-                            if club_name_en:
+                           
 
-                                ui.label(
-                                    club_name_en
-                                ).classes(
-                                    'teams-header-en'
-                                )
-
-                            ui.label(
-                                'إنشاء وإدارة فرق النادي وربط كل فريق بالفئة والرياضة المناسبة.'
-                            ).classes(
-                                'teams-header-description mt-2'
-                            )
+                            
+                        
 
                     with ui.element(
                         'div'

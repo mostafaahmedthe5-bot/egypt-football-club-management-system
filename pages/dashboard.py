@@ -279,13 +279,8 @@ def content(club_id=None):
                 position: relative;
                 overflow: hidden;
 
-                background:
-                    linear-gradient(
-                        135deg,
-                        #0f172a 0%,
-                        #172554 50%,
-                        #1e3a8a 100%
-                    );
+                background:#527A91;
+                    
 
                 border: 1px solid rgba(255,255,255,.08);
 
@@ -729,7 +724,7 @@ def content(club_id=None):
                 ):
 
                     with ui.row().classes(
-                        'items-center gap-4'
+                        'hero w-full flex flex-col items-center justify-center text-center'
                     ):
 
                         with ui.element(
@@ -745,59 +740,22 @@ def content(club_id=None):
                             )
 
                         ui.label(
-                            'لوحة التحكم والإحصائيات'
+                            'مركز الإدارة'
                         ).classes(
                             'hero-title'
                         )
-
-                    ui.label(
-                        club_name_ar
-                    ).classes(
-                        'hero-club-name mt-1'
-                    )
-
-                    if club_name_en:
-
-                        ui.label(
-                            club_name_en
-                        ).classes(
-                            'hero-club-en'
+                        ui.label(club_name_ar).classes(
+                            'text-white text-5xl md:text-4xl font-black text-center mx-auto'
                         )
+                                            
 
-                    ui.label(
-                        'مرحباً بك في نظام الإدارة المتقدم. '
-                        'تابع بيانات النادي واللاعبين والفرق والبطولات من مكان واحد.'
-                    ).classes(
-                        'hero-description mt-2'
-                    )
+                    
 
-                    with ui.element(
-                        'div'
-                    ).classes(
-                        'hero-status'
-                    ):
+                  
 
-                        ui.element(
-                            'span'
-                        ).classes(
-                            'hero-status-dot'
-                        )
+                       
 
-                        ui.label(
-                            'النظام يعمل بشكل طبيعي'
-                        )
-
-                with ui.element(
-                    'div'
-                ).classes(
-                    'hero-graphic'
-                ):
-
-                    ui.icon(
-                        'corporate_fare'
-                    ).classes(
-                        'text-7xl text-white opacity-90'
-                    )
+               
 
         # =====================================================
         # STATISTICS

@@ -106,13 +106,8 @@ def content(club_id=None):
             .medical-header {
                 width: 100%;
 
-                background:
-                    linear-gradient(
-                        135deg,
-                        #0f172a 0%,
-                        #172554 58%,
-                        #1e3a8a 100%
-                    );
+                background:#6F9C8A;
+                    
 
                 border-radius: 24px;
 
@@ -781,19 +776,9 @@ def content(club_id=None):
                                 'medical-header-club'
                             )
 
-                            if club_name_en:
+                            
 
-                                ui.label(
-                                    club_name_en
-                                ).classes(
-                                    'medical-header-en'
-                                )
-
-                            ui.label(
-                                'متابعة الحالة الطبية وتحديث بيانات الكشف الخاصة بلاعبي النادي'
-                            ).classes(
-                                'medical-header-description mt-2'
-                            )
+                            
 
                     with ui.element(
                         'div'
@@ -807,9 +792,7 @@ def content(club_id=None):
                             'medical-header-badge-dot'
                         )
 
-                        ui.label(
-                            'النظام الطبي'
-                        )
+                        
 
             # =====================================================
             # STATISTICS
