@@ -1,9 +1,36 @@
-from nicegui import ui, app
+from nicegui import app, ui
 import database as db
 
 
+def get_club_logo_url(club_name):
+    logos = {
+        'الأهلي': 'https://assets.footylogos.com/logos/al-ahly-sc/al-ahly-sc-logo-footylogos.png',
+        'الزمالك': 'https://assets.footylogos.com/logos/zamalek-sc/zamalek-sc-logo-footylogos.png',
+        'بيراميدز': 'https://assets.footylogos.com/logos/pyramids-fc/pyramids-fc-logo-footylogos.png',
+        'المصري': 'https://assets.footylogos.com/logos/al-masry-sc/al-masry-sc-logo-footylogos.png',
+        'الإسماعيلي': 'https://assets.footylogos.com/logos/ismaily-sc/ismaily-sc-logo-footylogos.png',
+        'الاتحاد السكندري': 'https://assets.footylogos.com/logos/ittihad-alexandria/ittihad-alexandria-logo-footylogos.png',
+        'سموحة': 'https://assets.footylogos.com/logos/smouha/smouha-logo-footylogos.png',
+        'إنبي': 'https://assets.footylogos.com/logos/enppi-sc/enppi-sc-logo-footylogos.png',
+        'البنك الأهلي': 'https://assets.footylogos.com/logos/bank-el-ahly/bank-el-ahly-logo-footylogos.png',
+        'سيراميكا كليوباترا': 'https://assets.footylogos.com/logos/ceramica-cleopatra-fc/ceramica-cleopatra-fc-logo-footylogos.png',
+        'الجونة': 'https://assets.footylogos.com/logos/el-gouna-fc/el-gouna-fc-logo-footylogos.png',
+        'طلائع الجيش': 'https://assets.footylogos.com/logos/talaea-el-geish/talaea-el-geish-logo-footylogos.png',
+        'مودرن سبورت': 'https://assets.footylogos.com/logos/modern-sport/modern-sport-logo-footylogos.png',
+        'زد': 'https://assets.footylogos.com/logos/zed-fc/zed-fc-logo-footylogos.png',
+        'المقاولون العرب': 'https://assets.footylogos.com/logos/el-mokawloon/el-mokawloon-logo-footylogos.png',
+        'وادي دجلة': 'https://assets.footylogos.com/logos/wadi-degla-sc/wadi-degla-sc-logo-footylogos.png',
+        'غزل المحلة': 'https://assets.footylogos.com/logos/ghazl-el-mahalla/ghazl-el-mahalla-logo-footylogos.png',
+        'فاركو': 'https://assets.footylogos.com/logos/pharco-fc/pharco-fc-logo-footylogos.png',
+        'حرس الحدود': 'https://assets.footylogos.com/logos/harras-hodoud/harras-hodoud-logo-footylogos.png',
+        'بتروجيت': 'https://assets.footylogos.com/logos/petrojet-fc/petrojet-fc-logo-footylogos.png',
+        'كهرباء الإسماعيلية': None,
+    }
+    return logos.get((club_name or '').strip())
+
+
 def content():
-    clubs = db.fetch_all("SELECT * FROM Club")
+    clubs = db.fetch_all('SELECT * FROM Club')
 
     ui.add_head_html('''
         <style>
@@ -74,13 +101,10 @@ def content():
     ''')
 
     with ui.column().classes('clubs-page w-full items-center p-6 md:p-10'):
-
         # Header
         with ui.column().classes('items-center text-center mb-10'):
-
             with ui.element('div').classes(
-                'w-20 h-20 rounded-3xl bg-slate-900 '
-                'flex items-center justify-center shadow-xl mb-5'
+                'w-20 h-20 rounded-3xl bg-slate-900 flex items-center justify-center shadow-xl mb-5'
             ):
                 ui.label('⚽').classes('text-4xl')
 
@@ -88,15 +112,12 @@ def content():
                 'hero-title text-4xl md:text-5xl font-black mb-2'
             )
 
-            ui.label(
-                'اختر النادي للدخول إلى نظام إدارة النادي'
-            ).classes(
+            ui.label('اختر النادي للدخول إلى نظام إدارة النادي').classes(
                 'text-slate-500 text-lg md:text-xl font-medium'
             )
 
             with ui.row().classes(
-                'items-center gap-2 mt-4 bg-white px-5 py-2 '
-                'rounded-full shadow-sm border border-slate-200'
+                'items-center gap-2 mt-4 bg-white px-5 py-2 rounded-full shadow-sm border border-slate-200'
             ):
                 ui.icon('groups').classes('text-amber-500')
                 ui.label(f'{len(clubs)} نادي متاح').classes(
@@ -105,66 +126,51 @@ def content():
 
         # Clubs
         if not clubs:
-
             with ui.column().classes(
-                'items-center justify-center bg-white '
-                'rounded-3xl p-12 shadow-sm border border-slate-200'
+                'items-center justify-center bg-white rounded-3xl p-12 shadow-sm border border-slate-200'
             ):
-                ui.icon('sports_soccer').classes(
-                    'text-6xl text-slate-300'
-                )
-
+                ui.icon('sports_soccer').classes('text-6xl text-slate-300')
                 ui.label('لا توجد أندية حاليًا').classes(
                     'text-xl font-bold text-slate-600 mt-4'
                 )
-
         else:
-
             with ui.row().classes(
                 'w-full max-w-7xl justify-center flex-wrap gap-6'
             ):
-
                 for club in clubs:
-
                     c_id = club['Id']
                     c_name = club['ClubNameAR']
-
-                    def select_club(club_id=c_id):
-                        app.storage.user['selected_club_id'] = club_id
-                        ui.navigate.to('/login')
+                    logo_url = get_club_logo_url(c_name)
 
                     with ui.button(
-                        on_click=select_club
-                    ).props(
-                        'flat no-caps'
-                    ).classes('club-btn'):
-
-                        ui.element('div').classes('club-icon').props(
-                            'innerHTML="⚽"'
+                        on_click=lambda id_=c_id: (
+                            app.storage.user.__setitem__(
+                                'selected_club_id', id_
+                            ),
+                            ui.navigate.to('/login'),
                         )
+                    ).props('flat no-caps').classes('club-btn'):
+
+                        with ui.element('div').classes('club-icon'):
+                            if logo_url:
+                                ui.image(logo_url).classes(
+                                    'w-16 h-16 object-contain'
+                                )
+                            else:
+                                ui.icon('sports_soccer').classes(
+                                    'text-4xl text-white'
+                                )
 
                         ui.label(c_name).classes('club-name')
 
-                        with ui.row().classes(
-                            'items-center gap-1'
-                        ):
-                            ui.icon('login').classes(
-                                'text-amber-500 text-sm'
-                            )
-
-                            ui.label('تسجيل الدخول').classes(
-                                'login-text'
-                            )
+                        with ui.row().classes('items-center gap-1'):
+                            ui.icon('login').classes('text-amber-500 text-sm')
+                            ui.label('تسجيل الدخول').classes('login-text')
 
         with ui.column().classes('items-center mt-12'):
-            ui.label(
-                'Egypt Football Club Management System'
-            ).classes(
+            ui.label('Egypt Football Club Management System').classes(
                 'text-slate-400 text-sm font-medium'
             )
-
-            ui.label(
-                'نظام إدارة الأندية الرياضية'
-            ).classes(
+            ui.label('نظام إدارة الأندية الرياضية').classes(
                 'text-slate-400 text-xs mt-1'
             )

@@ -1,6 +1,55 @@
 from nicegui import ui
 import database as db
 
+def get_club_logo_url(club_name):
+        logos = {
+        'الأهلي': 'https://assets.footylogos.com/logos/al-ahly-sc/al-ahly-sc-logo-footylogos.png',
+
+
+            'الزمالك': 'https://assets.footylogos.com/logos/zamalek-sc/zamalek-sc-logo-footylogos.png',
+
+            'بيراميدز': 'https://assets.footylogos.com/logos/pyramids-fc/pyramids-fc-logo-footylogos.png',
+
+            'المصري': 'https://assets.footylogos.com/logos/al-masry-sc/al-masry-sc-logo-footylogos.png',
+
+            'الإسماعيلي': 'https://assets.footylogos.com/logos/ismaily-sc/ismaily-sc-logo-footylogos.png',
+
+            'الاتحاد السكندري': 'https://assets.footylogos.com/logos/ittihad-alexandria/ittihad-alexandria-logo-footylogos.png',
+
+            'سموحة': 'https://assets.footylogos.com/logos/smouha/smouha-logo-footylogos.png',
+
+            'إنبي': 'https://assets.footylogos.com/logos/enppi-sc/enppi-sc-logo-footylogos.png',
+
+            'البنك الأهلي': 'https://assets.footylogos.com/logos/bank-el-ahly/bank-el-ahly-logo-footylogos.png',
+
+            'سيراميكا كليوباترا': 'https://assets.footylogos.com/logos/ceramica-cleopatra-fc/ceramica-cleopatra-fc-logo-footylogos.png',
+
+            'الجونة': 'https://assets.footylogos.com/logos/el-gouna-fc/el-gouna-fc-logo-footylogos.png',
+
+            'طلائع الجيش': 'https://assets.footylogos.com/logos/talaea-el-geish/talaea-el-geish-logo-footylogos.png',
+
+            'مودرن سبورت': 'https://assets.footylogos.com/logos/modern-sport/modern-sport-logo-footylogos.png',
+
+            'زد': 'https://assets.footylogos.com/logos/zed-fc/zed-fc-logo-footylogos.png',
+
+            'المقاولون العرب': 'https://assets.footylogos.com/logos/el-mokawloon/el-mokawloon-logo-footylogos.png',
+
+            'وادي دجلة': 'https://assets.footylogos.com/logos/wadi-degla-sc/wadi-degla-sc-logo-footylogos.png',
+
+            'غزل المحلة': 'https://assets.footylogos.com/logos/ghazl-el-mahalla/ghazl-el-mahalla-logo-footylogos.png',
+
+            'فاركو': 'https://assets.footylogos.com/logos/pharco-fc/pharco-fc-logo-footylogos.png',
+
+            'حرس الحدود': 'https://assets.footylogos.com/logos/harras-hodoud/harras-hodoud-logo-footylogos.png',
+
+            'بتروجيت': 'https://assets.footylogos.com/logos/petrojet-fc/petrojet-fc-logo-footylogos.png',
+
+            'كهرباء الإسماعيلية': None,
+        }
+
+        return logos.get((club_name or '').strip())
+
+
 
 def content(club_id=None):
     # =========================================================
@@ -213,7 +262,7 @@ def content(club_id=None):
                 with ui.column().classes('gap-1'):
 
                     ui.label(
-                        '⚽ جميع الأندية'
+                        ' جميع الأندية'
                     ).classes(
                         'text-3xl md:text-4xl '
                         'font-black text-white'
@@ -226,14 +275,7 @@ def content(club_id=None):
                         'text-base md:text-lg mt-1'
                     )
 
-                with ui.element('div').classes(
-                    'w-20 h-20 md:w-24 md:h-24 '
-                    'rounded-3xl bg-white/10 '
-                    'border border-white/20 '
-                    'flex items-center justify-center'
-                ):
-                    ui.label('⚽').classes('text-5xl')
-
+                
         # =====================================================
         # Summary
         # =====================================================
@@ -303,12 +345,15 @@ def content(club_id=None):
                 'flex-wrap gap-6'
             ):
 
+
                 for club in clubs:
 
                     club_name_ar = (
                         club['ClubNameAR']
                         or 'بدون اسم'
                     )
+
+                    logo_url = get_club_logo_url(club_name_ar)
 
                     club_name_en = (
                         club['ClubNameEN']
@@ -324,6 +369,8 @@ def content(club_id=None):
                         club['PlayerCount']
                         or 0
                     )
+
+
 
                     # =================================================
                     # Card - View Only
@@ -344,16 +391,30 @@ def content(club_id=None):
                             # Logo
                             # =========================================
 
+                           
                             with ui.element(
                                 'div'
                             ).classes(
                                 'club-logo mb-4'
                             ):
-                                ui.label(
-                                    '⚽'
-                                ).classes(
-                                    'text-4xl'
-                                )
+
+                                if logo_url:
+
+                                    ui.image(
+                                        logo_url
+                                    ).classes(
+                                        'w-[72px] h-[72px] object-contain'
+                                    )
+
+                                else:
+
+                                    ui.icon(
+                                        'sports_soccer'
+                                    ).classes(
+                                        'text-4xl text-slate-400'
+                                    )
+
+
 
                             # =========================================
                             # Name

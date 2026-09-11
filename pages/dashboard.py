@@ -77,7 +77,7 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # عدد الرياضات الموجودة في فرق النادي
+    # عدد الرياضات
     # =========================================================
 
     sports_count = len(
@@ -93,7 +93,7 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # بيانات Player مع الجداول المرتبطة
+    # بيانات اللاعبين
     # =========================================================
 
     player_details = db.fetch_all(
@@ -135,7 +135,7 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # حالات MedicalReportState
+    # الحالات الطبية
     # =========================================================
 
     medical_states = db.fetch_all(
@@ -153,7 +153,7 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # حالات MembershipStatus
+    # حالات العضوية
     # =========================================================
 
     membership_states = db.fetch_all(
@@ -207,7 +207,7 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # آخر اللاعبين
+    # أحدث اللاعبين
     # =========================================================
 
     latest_players = db.fetch_all(
@@ -230,127 +230,474 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # CSS
+    # CSS STATIC
     # =========================================================
 
     ui.add_head_html(
         '''
         <style>
 
-            .dashboard-page {
-                min-height: 100vh;
-                background:
-                    radial-gradient(
-                        circle at top right,
-                        rgba(245,158,11,.08),
-                        transparent 25%
-                    ),
-                    radial-gradient(
-                        circle at bottom left,
-                        rgba(30,58,138,.06),
-                        transparent 30%
-                    ),
-                    #f8fafc;
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                min-height: 100%;
             }
+
+            body {
+                overflow-x: hidden;
+                background: #f1f5f9;
+            }
+
+            /* =================================================
+               MAIN
+               ================================================= */
+
+            .rtl-container {
+                direction: rtl;
+                width: 100%;
+                max-width: 100% !important;
+                min-height: 100vh;
+                margin: 0;
+                padding: 4px 4px 30px 4px;
+            }
+
+            .dashboard-content {
+                width: 100%;
+            }
+
+            /* =================================================
+               HERO
+               ================================================= */
 
             .hero-card {
                 width: 100%;
-                border-radius: 26px;
-                padding: 28px;
+                min-height: 240px;
+                border-radius: 24px;
+                padding: 36px 40px;
+
+                position: relative;
+                overflow: hidden;
+
                 background:
                     linear-gradient(
                         135deg,
                         #0f172a 0%,
-                        #1e293b 55%,
+                        #172554 50%,
                         #1e3a8a 100%
                     );
+
+                border: 1px solid rgba(255,255,255,.08);
+
                 box-shadow:
-                    0 20px 45px rgba(15,23,42,.16);
-                position: relative;
-                overflow: hidden;
+                    0 14px 35px rgba(15,23,42,.16);
             }
 
             .hero-card::before {
                 content: "";
+
                 position: absolute;
-                width: 220px;
-                height: 220px;
+
+                width: 300px;
+                height: 300px;
+
                 border-radius: 50%;
-                background: rgba(255,255,255,.05);
-                top: -100px;
-                right: -60px;
+
+                top: -150px;
+                right: -90px;
+
+                background:
+                    radial-gradient(
+                        circle,
+                        rgba(56,189,248,.14),
+                        transparent 70%
+                    );
             }
 
             .hero-card::after {
                 content: "";
+
                 position: absolute;
-                width: 180px;
-                height: 180px;
+
+                width: 240px;
+                height: 240px;
+
                 border-radius: 50%;
-                background: rgba(245,158,11,.08);
-                bottom: -100px;
-                left: 30%;
+
+                bottom: -130px;
+                left: 8%;
+
+                background:
+                    radial-gradient(
+                        circle,
+                        rgba(245,158,11,.08),
+                        transparent 70%
+                    );
             }
 
-            .stat-card {
-                background: white;
-                border: 1px solid #e2e8f0;
-                border-radius: 20px;
-                padding: 20px;
-                min-height: 155px;
-                box-shadow:
-                    0 8px 25px rgba(15,23,42,.05);
-                transition: .2s ease;
+            .hero-content {
+                position: relative;
+                z-index: 2;
             }
 
-            .stat-card:hover {
-                transform: translateY(-5px);
-                box-shadow:
-                    0 18px 35px rgba(15,23,42,.10);
-            }
+            .hero-icon-box {
+                width: 68px;
+                height: 68px;
 
-            .stat-icon {
-                width: 52px;
-                height: 52px;
-                border-radius: 16px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
+                border-radius: 18px;
+
+                background:
+                    rgba(255,255,255,.08);
+
+                border:
+                    1px solid
+                    rgba(255,255,255,.12);
             }
+
+            .hero-title {
+                color: white;
+                font-size: 32px;
+                font-weight: 900;
+                line-height: 1.25;
+            }
+
+            .hero-club-name {
+                color: #38bdf8;
+                font-size: 25px;
+                font-weight: 850;
+            }
+
+            .hero-club-en {
+                color: #94a3b8;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 3px;
+            }
+
+            .hero-description {
+                color: #cbd5e1;
+                font-size: 14px;
+                line-height: 1.8;
+                max-width: 700px;
+            }
+
+            .hero-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+
+                margin-top: 14px;
+                padding: 7px 12px;
+
+                border-radius: 999px;
+
+                color: #d1fae5;
+                background: rgba(16,185,129,.10);
+
+                border:
+                    1px solid
+                    rgba(16,185,129,.18);
+
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .hero-status-dot {
+                width: 7px;
+                height: 7px;
+
+                border-radius: 50%;
+
+                background: #10b981;
+            }
+
+            .hero-graphic {
+                position: relative;
+                z-index: 2;
+
+                width: 140px;
+                height: 140px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 34px;
+
+                background:
+                    rgba(255,255,255,.06);
+
+                border:
+                    1px solid
+                    rgba(255,255,255,.10);
+            }
+
+            /* =================================================
+               STAT CARDS
+               ================================================= */
+
+            .stat-card {
+                min-height: 170px;
+
+                background: white;
+
+                border:
+                    1px solid #e2e8f0;
+
+                border-radius: 20px;
+
+                padding: 22px;
+
+                box-shadow:
+                    0 7px 20px
+                    rgba(15,23,42,.045);
+
+                overflow: hidden;
+            }
+
+            .stat-card::before {
+                content: "";
+
+                position: absolute;
+
+                width: 100%;
+                height: 3px;
+
+                top: 0;
+                right: 0;
+
+                background:
+                    #e2e8f0;
+            }
+
+            .stat-icon-wrapper {
+                width: 58px;
+                height: 58px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 16px;
+            }
+
+            .stat-label {
+                color: #64748b;
+                font-size: 12px;
+                font-weight: 750;
+            }
+
+            .stat-value {
+                color: #0f172a;
+                font-size: 40px;
+                line-height: 1;
+                font-weight: 950;
+            }
+
+            .stat-bottom-line {
+                width: 100%;
+                height: 3px;
+
+                border-radius: 999px;
+
+                background:
+                    #f1f5f9;
+            }
+
+            /* =================================================
+               SECTION CARDS
+               ================================================= */
 
             .section-card {
                 background: white;
-                border: 1px solid #e2e8f0;
-                border-radius: 22px;
+
+                border:
+                    1px solid #e2e8f0;
+
+                border-radius: 20px;
+
                 box-shadow:
-                    0 8px 25px rgba(15,23,42,.05);
+                    0 6px 20px
+                    rgba(15,23,42,.04);
             }
 
             .section-title {
-                color: #0f172a;
-                font-size: 19px;
+                color: #1e293b;
+                font-size: 16px;
+                font-weight: 850;
+            }
+
+            .section-subtitle {
+                color: #94a3b8;
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            .section-icon {
+                width: 42px;
+                height: 42px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 12px;
+            }
+
+            /* =================================================
+               LIST
+               ================================================= */
+
+            .list-item {
+                width: 100%;
+
+                border-bottom:
+                    1px solid #f1f5f9;
+
+                padding: 12px 10px;
+            }
+
+            .list-item:last-child {
+                border-bottom: none;
+            }
+
+            .item-avatar {
+                width: 48px;
+                height: 48px;
+
+                flex-shrink: 0;
+
+                border-radius: 14px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border:
+                    1px solid #e2e8f0;
+            }
+
+            .number-badge {
+                min-width: 42px;
+                height: 29px;
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                padding: 0 10px;
+
+                border-radius: 999px;
+
+                background: #f8fafc;
+
+                color: #334155;
+
+                border:
+                    1px solid #e2e8f0;
+
+                font-size: 12px;
                 font-weight: 900;
             }
 
-            .team-item {
-                border: 1px solid #e2e8f0;
-                border-radius: 16px;
-                background: white;
-                transition: .2s ease;
+            /* =================================================
+               QUICK ACTIONS
+               ================================================= */
+
+            .quick-action {
+                min-height: 78px;
+
+                width: 100%;
+
+                border-radius: 15px;
+
+                font-weight: 800 !important;
+
+                box-shadow: none !important;
             }
 
-            .team-item:hover {
-                background: #f8fafc;
-                transform: translateX(-2px);
+            /* =================================================
+               SCROLLBAR
+               ================================================= */
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
             }
 
-            .player-item {
-                border-bottom: 1px solid #f1f5f9;
-                padding: 13px 4px;
+            ::-webkit-scrollbar-track {
+                background: transparent;
             }
 
-            .player-item:last-child {
-                border-bottom: none;
+            ::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 999px;
+            }
+
+            /* =================================================
+               RESPONSIVE
+               ================================================= */
+
+            @media (max-width: 900px) {
+
+                .hero-card {
+                    padding: 30px;
+                }
+
+                .hero-title {
+                    font-size: 27px;
+                }
+
+                .hero-club-name {
+                    font-size: 21px;
+                }
+
+                .hero-graphic {
+                    width: 110px;
+                    height: 110px;
+                }
+            }
+
+            @media (max-width: 600px) {
+
+                .rtl-container {
+                    padding: 2px 0 20px;
+                }
+
+                .hero-card {
+                    min-height: auto;
+                    border-radius: 18px;
+                    padding: 24px 20px;
+                }
+
+                .hero-title {
+                    font-size: 23px;
+                }
+
+                .hero-club-name {
+                    font-size: 18px;
+                }
+
+                .hero-description {
+                    font-size: 12px;
+                }
+
+                .hero-graphic {
+                    display: none;
+                }
+
+                .stat-card {
+                    min-height: 145px;
+                    border-radius: 17px;
+                }
+
+                .section-card {
+                    border-radius: 17px;
+                }
             }
 
         </style>
@@ -358,270 +705,390 @@ def content(club_id=None):
     )
 
     # =========================================================
-    # الصفحة
+    # Main Container
     # =========================================================
 
-    with ui.column().classes(
-        'dashboard-page w-full p-4 md:p-6 lg:p-8 gap-6'
+    with ui.element('div').classes(
+        'rtl-container flex flex-col gap-6'
     ):
 
         # =====================================================
-        # Header
+        # HERO
         # =====================================================
 
-        with ui.element('div').classes('hero-card'):
+        with ui.element('div').classes(
+            'hero-card'
+        ):
 
             with ui.row().classes(
-                'w-full items-center justify-between relative z-10'
+                'hero-content w-full items-center justify-between flex-wrap gap-8'
             ):
 
-                with ui.column().classes('gap-1'):
+                with ui.column().classes(
+                    'gap-2 flex-1'
+                ):
 
-                    ui.label(
-                        '📊 لوحة التحكم والإحصائيات'
-                    ).classes(
-                        'text-3xl md:text-4xl font-black text-white'
-                    )
+                    with ui.row().classes(
+                        'items-center gap-4'
+                    ):
+
+                        with ui.element(
+                            'div'
+                        ).classes(
+                            'hero-icon-box'
+                        ):
+
+                            ui.icon(
+                                'dashboard'
+                            ).classes(
+                                'text-4xl text-white'
+                            )
+
+                        ui.label(
+                            'لوحة التحكم والإحصائيات'
+                        ).classes(
+                            'hero-title'
+                        )
 
                     ui.label(
                         club_name_ar
                     ).classes(
-                        'text-xl md:text-2xl font-bold text-amber-400'
+                        'hero-club-name mt-1'
                     )
 
                     if club_name_en:
+
                         ui.label(
                             club_name_en
                         ).classes(
-                            'text-sm text-white/60'
+                            'hero-club-en'
                         )
 
                     ui.label(
-                        'مرحباً بك في نظام إدارة النادي'
+                        'مرحباً بك في نظام الإدارة المتقدم. '
+                        'تابع بيانات النادي واللاعبين والفرق والبطولات من مكان واحد.'
                     ).classes(
-                        'text-sm md:text-base text-white/70 mt-2'
+                        'hero-description mt-2'
                     )
 
-                with ui.element('div').classes(
-                    'w-20 h-20 md:w-24 md:h-24 '
-                    'rounded-3xl bg-white/10 '
-                    'border border-white/20 '
-                    'flex items-center justify-center'
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'hero-status'
+                    ):
+
+                        ui.element(
+                            'span'
+                        ).classes(
+                            'hero-status-dot'
+                        )
+
+                        ui.label(
+                            'النظام يعمل بشكل طبيعي'
+                        )
+
+                with ui.element(
+                    'div'
+                ).classes(
+                    'hero-graphic'
                 ):
-                    ui.label('⚽').classes(
-                        'text-5xl md:text-6xl'
+
+                    ui.icon(
+                        'corporate_fare'
+                    ).classes(
+                        'text-7xl text-white opacity-90'
                     )
 
         # =====================================================
-        # Main Statistics
+        # STATISTICS
         # =====================================================
-
-        ui.label(
-            'الإحصائيات الرئيسية'
-        ).classes(
-            'section-title'
-        )
 
         with ui.row().classes(
-            'w-full grid grid-cols-1 sm:grid-cols-2 '
-            'lg:grid-cols-4 gap-4'
+            'w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5'
         ):
 
             # Players
-            with ui.card().classes('stat-card w-full'):
-
-                with ui.row().classes(
-                    'w-full items-center justify-between'
-                ):
-
-                    with ui.element('div').classes(
-                        'stat-icon bg-blue-50'
-                    ):
-                        ui.icon('groups').classes(
-                            'text-2xl text-blue-600'
-                        )
-
-                    ui.label(
-                        str(players_count)
-                    ).classes(
-                        'text-4xl font-black text-slate-900'
-                    )
-
-                ui.label(
-                    'إجمالي اللاعبين'
-                ).classes(
-                    'text-slate-600 font-bold mt-4'
-                )
-
-                ui.label(
-                    'Players'
-                ).classes(
-                    'text-xs text-slate-400 mt-1'
-                )
-
-            # Teams
-            with ui.card().classes('stat-card w-full'):
-
-                with ui.row().classes(
-                    'w-full items-center justify-between'
-                ):
-
-                    with ui.element('div').classes(
-                        'stat-icon bg-emerald-50'
-                    ):
-                        ui.icon('sports_soccer').classes(
-                            'text-2xl text-emerald-600'
-                        )
-
-                    ui.label(
-                        str(teams_count)
-                    ).classes(
-                        'text-4xl font-black text-slate-900'
-                    )
-
-                ui.label(
-                    'إجمالي الفرق'
-                ).classes(
-                    'text-slate-600 font-bold mt-4'
-                )
-
-                ui.label(
-                    'Team'
-                ).classes(
-                    'text-xs text-slate-400 mt-1'
-                )
-
-            # Subscriptions
-            with ui.card().classes('stat-card w-full'):
-
-                with ui.row().classes(
-                    'w-full items-center justify-between'
-                ):
-
-                    with ui.element('div').classes(
-                        'stat-icon bg-amber-50'
-                    ):
-                        ui.icon('assignment_ind').classes(
-                            'text-2xl text-amber-600'
-                        )
-
-                    ui.label(
-                        str(subscriptions_count)
-                    ).classes(
-                        'text-4xl font-black text-slate-900'
-                    )
-
-                ui.label(
-                    'اشتراكات اللاعبين'
-                ).classes(
-                    'text-slate-600 font-bold mt-4'
-                )
-
-                ui.label(
-                    'PlayerTeamSubscribtion'
-                ).classes(
-                    'text-xs text-slate-400 mt-1'
-                )
-
-            # Tournaments
-            with ui.card().classes('stat-card w-full'):
-
-                with ui.row().classes(
-                    'w-full items-center justify-between'
-                ):
-
-                    with ui.element('div').classes(
-                        'stat-icon bg-purple-50'
-                    ):
-                        ui.icon('emoji_events').classes(
-                            'text-2xl text-purple-600'
-                        )
-
-                    ui.label(
-                        str(tournaments_count)
-                    ).classes(
-                        'text-4xl font-black text-slate-900'
-                    )
-
-                ui.label(
-                    'البطولات'
-                ).classes(
-                    'text-slate-600 font-bold mt-4'
-                )
-
-                ui.label(
-                    'Tournament'
-                ).classes(
-                    'text-xs text-slate-400 mt-1'
-                )
-
-        # =====================================================
-        # Secondary Statistics
-        # =====================================================
-
-        with ui.row().classes(
-            'w-full grid grid-cols-1 md:grid-cols-3 gap-4'
-        ):
-
             with ui.card().classes(
-                'section-card w-full p-5'
+                'stat-card'
             ):
 
                 with ui.row().classes(
-                    'items-center gap-3 mb-4'
+                    'w-full items-start justify-between'
                 ):
-                    with ui.element('div').classes(
-                        'w-11 h-11 rounded-xl bg-blue-50 '
-                        'flex items-center justify-center'
+
+                    with ui.column().classes(
+                        'gap-2'
                     ):
-                        ui.icon('sports').classes(
-                            'text-xl text-blue-600'
+
+                        ui.label(
+                            'إجمالي اللاعبين'
+                        ).classes(
+                            'stat-label'
                         )
 
-                    ui.label(
-                        'الرياضات'
+                        ui.label(
+                            str(players_count)
+                        ).classes(
+                            'stat-value'
+                        )
+
+                    with ui.element(
+                        'div'
                     ).classes(
-                        'section-title'
+                        'stat-icon-wrapper bg-sky-100 text-sky-600'
+                    ):
+
+                        ui.icon(
+                            'groups'
+                        ).classes(
+                            'text-3xl'
+                        )
+
+                ui.label(
+                    'المسجلين بالنادي'
+                ).classes(
+                    'text-xs text-slate-400 mt-5'
+                )
+
+                ui.element(
+                    'div'
+                ).classes(
+                    'stat-bottom-line mt-4'
+                )
+
+            # Teams
+            with ui.card().classes(
+                'stat-card'
+            ):
+
+                with ui.row().classes(
+                    'w-full items-start justify-between'
+                ):
+
+                    with ui.column().classes(
+                        'gap-2'
+                    ):
+
+                        ui.label(
+                            'إجمالي الفرق'
+                        ).classes(
+                            'stat-label'
+                        )
+
+                        ui.label(
+                            str(teams_count)
+                        ).classes(
+                            'stat-value'
+                        )
+
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'stat-icon-wrapper bg-emerald-100 text-emerald-600'
+                    ):
+
+                        ui.icon(
+                            'diversity_3'
+                        ).classes(
+                            'text-3xl'
+                        )
+
+                ui.label(
+                    'الفرق المسجلة'
+                ).classes(
+                    'text-xs text-slate-400 mt-5'
+                )
+
+                ui.element(
+                    'div'
+                ).classes(
+                    'stat-bottom-line mt-4'
+                )
+
+            # Subscriptions
+            with ui.card().classes(
+                'stat-card'
+            ):
+
+                with ui.row().classes(
+                    'w-full items-start justify-between'
+                ):
+
+                    with ui.column().classes(
+                        'gap-2'
+                    ):
+
+                        ui.label(
+                            'اشتراكات اللاعبين'
+                        ).classes(
+                            'stat-label'
+                        )
+
+                        ui.label(
+                            str(subscriptions_count)
+                        ).classes(
+                            'stat-value'
+                        )
+
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'stat-icon-wrapper bg-amber-100 text-amber-600'
+                    ):
+
+                        ui.icon(
+                            'how_to_reg'
+                        ).classes(
+                            'text-3xl'
+                        )
+
+                ui.label(
+                    'الارتباطات الحالية'
+                ).classes(
+                    'text-xs text-slate-400 mt-5'
+                )
+
+                ui.element(
+                    'div'
+                ).classes(
+                    'stat-bottom-line mt-4'
+                )
+
+            # Tournaments
+            with ui.card().classes(
+                'stat-card'
+            ):
+
+                with ui.row().classes(
+                    'w-full items-start justify-between'
+                ):
+
+                    with ui.column().classes(
+                        'gap-2'
+                    ):
+
+                        ui.label(
+                            'البطولات'
+                        ).classes(
+                            'stat-label'
+                        )
+
+                        ui.label(
+                            str(tournaments_count)
+                        ).classes(
+                            'stat-value'
+                        )
+
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'stat-icon-wrapper bg-purple-100 text-purple-600'
+                    ):
+
+                        ui.icon(
+                            'emoji_events'
+                        ).classes(
+                            'text-3xl'
+                        )
+
+                ui.label(
+                    'المشاركات الرسمية'
+                ).classes(
+                    'text-xs text-slate-400 mt-5'
+                )
+
+                ui.element(
+                    'div'
+                ).classes(
+                    'stat-bottom-line mt-4'
+                )
+
+        # =====================================================
+        # SECONDARY STATS
+        # =====================================================
+
+        with ui.row().classes(
+            'w-full grid grid-cols-1 md:grid-cols-3 gap-5'
+        ):
+
+            # Sports
+            with ui.card().classes(
+                'section-card p-7 flex flex-col justify-center items-center text-center'
+            ):
+
+                with ui.element(
+                    'div'
+                ).classes(
+                    'section-icon bg-blue-50 text-blue-600 mb-4'
+                ):
+
+                    ui.icon(
+                        'sports'
+                    ).classes(
+                        'text-2xl'
                     )
+
+                ui.label(
+                    'الرياضات المدرجة'
+                ).classes(
+                    'section-title'
+                )
 
                 ui.label(
                     str(sports_count)
                 ).classes(
-                    'text-3xl font-black text-slate-900'
+                    'text-5xl font-black text-slate-800 mt-2'
                 )
 
                 ui.label(
-                    'رياضة مرتبطة بفرق النادي'
+                    'أنواع الرياضات المرتبطة بفرق النادي'
                 ).classes(
-                    'text-sm text-slate-500 mt-1'
+                    'section-subtitle mt-2'
                 )
 
+            # Medical
             with ui.card().classes(
-                'section-card w-full p-5'
+                'section-card p-6'
             ):
 
                 with ui.row().classes(
-                    'items-center gap-3 mb-4'
+                    'items-center gap-3 mb-6'
                 ):
-                    with ui.element('div').classes(
-                        'w-11 h-11 rounded-xl bg-emerald-50 '
-                        'flex items-center justify-center'
+
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'section-icon bg-emerald-50 text-emerald-600'
                     ):
-                        ui.icon('health_and_safety').classes(
-                            'text-xl text-emerald-600'
+
+                        ui.icon(
+                            'medical_information'
+                        ).classes(
+                            'text-xl'
                         )
 
-                    ui.label(
-                        'MedicalReportState'
-                    ).classes(
-                        'section-title'
-                    )
+                    with ui.column().classes(
+                        'gap-0'
+                    ):
+
+                        ui.label(
+                            'الكشوفات الطبية'
+                        ).classes(
+                            'section-title'
+                        )
+
+                        ui.label(
+                            'الحالة الصحية للاعبين'
+                        ).classes(
+                            'section-subtitle'
+                        )
 
                 if medical_states:
 
                     with ui.column().classes(
-                        'w-full gap-2'
+                        'w-full gap-1'
                     ):
+
                         for state in medical_states:
 
                             state_name = (
@@ -629,57 +1096,88 @@ def content(club_id=None):
                                 or 'غير محدد'
                             )
 
-                            state_count = state['Count'] or 0
+                            state_count = (
+                                state['Count']
+                                or 0
+                            )
 
                             with ui.row().classes(
-                                'w-full justify-between items-center'
+                                'w-full justify-between items-center px-2 py-2'
                             ):
+
                                 ui.label(
                                     state_name
                                 ).classes(
-                                    'text-slate-600 font-semibold'
+                                    'text-slate-600 font-medium text-sm'
                                 )
 
                                 ui.label(
                                     str(state_count)
                                 ).classes(
-                                    'font-black text-slate-900'
+                                    'number-badge'
                                 )
 
                 else:
 
-                    ui.label(
-                        'لا توجد بيانات'
-                    ).classes(
-                        'text-slate-400'
-                    )
+                    with ui.column().classes(
+                        'w-full items-center justify-center py-6'
+                    ):
 
+                        ui.icon(
+                            'medical_information'
+                        ).classes(
+                            'text-4xl text-slate-300'
+                        )
+
+                        ui.label(
+                            'لا توجد بيانات طبية'
+                        ).classes(
+                            'text-slate-400 text-sm mt-2'
+                        )
+
+            # Membership
             with ui.card().classes(
-                'section-card w-full p-5'
+                'section-card p-6'
             ):
 
                 with ui.row().classes(
-                    'items-center gap-3 mb-4'
+                    'items-center gap-3 mb-6'
                 ):
-                    with ui.element('div').classes(
-                        'w-11 h-11 rounded-xl bg-amber-50 '
-                        'flex items-center justify-center'
+
+                    with ui.element(
+                        'div'
+                    ).classes(
+                        'section-icon bg-amber-50 text-amber-600'
                     ):
-                        ui.icon('card_membership').classes(
-                            'text-xl text-amber-600'
+
+                        ui.icon(
+                            'card_membership'
+                        ).classes(
+                            'text-xl'
                         )
 
-                    ui.label(
-                        'MembershipStatus'
-                    ).classes(
-                        'section-title'
-                    )
+                    with ui.column().classes(
+                        'gap-0'
+                    ):
+
+                        ui.label(
+                            'حالة العضويات'
+                        ).classes(
+                            'section-title'
+                        )
+
+                        ui.label(
+                            'موقف العضويات الحالية'
+                        ).classes(
+                            'section-subtitle'
+                        )
 
                 if membership_states:
 
                     with ui.column().classes(
-                        'w-full gap-2'
+                        'w-full gap-1'
                     ):
+
                         for state in membership_states:
 
                             state_name = (
@@ -687,98 +1185,122 @@ def content(club_id=None):
                                 or 'غير محدد'
                             )
 
-                            state_count = state['Count'] or 0
+                            state_count = (
+                                state['Count']
+                                or 0
+                            )
 
                             with ui.row().classes(
-                                'w-full justify-between items-center'
+                                'w-full justify-between items-center px-2 py-2'
                             ):
+
                                 ui.label(
                                     state_name
                                 ).classes(
-                                    'text-slate-600 font-semibold'
+                                    'text-slate-600 font-medium text-sm'
                                 )
 
                                 ui.label(
                                     str(state_count)
                                 ).classes(
-                                    'font-black text-slate-900'
+                                    'number-badge'
                                 )
 
                 else:
 
-                    ui.label(
-                        'لا توجد بيانات'
-                    ).classes(
-                        'text-slate-400'
-                    )
+                    with ui.column().classes(
+                        'w-full items-center justify-center py-6'
+                    ):
+
+                        ui.icon(
+                            'person_off'
+                        ).classes(
+                            'text-4xl text-slate-300'
+                        )
+
+                        ui.label(
+                            'لا توجد بيانات عضويات'
+                        ).classes(
+                            'text-slate-400 text-sm mt-2'
+                        )
 
         # =====================================================
-        # Teams + Latest Players
+        # TEAMS + LATEST PLAYERS
         # =====================================================
 
         with ui.row().classes(
-            'w-full grid grid-cols-1 lg:grid-cols-2 gap-6'
+            'w-full grid grid-cols-1 lg:grid-cols-2 gap-5'
         ):
 
-            # =================================================
             # Teams
-            # =================================================
-
             with ui.card().classes(
-                'section-card w-full p-5 md:p-6'
+                'section-card p-0 overflow-hidden'
             ):
 
                 with ui.row().classes(
-                    'w-full items-center justify-between mb-5'
+                    'w-full items-center justify-between p-5 bg-slate-50 border-b border-slate-100'
                 ):
 
                     with ui.row().classes(
                         'items-center gap-3'
                     ):
 
-                        with ui.element('div').classes(
-                            'w-11 h-11 rounded-xl bg-slate-100 '
-                            'flex items-center justify-center'
+                        with ui.element(
+                            'div'
+                        ).classes(
+                            'section-icon bg-indigo-50 text-indigo-600'
                         ):
-                            ui.icon('groups').classes(
-                                'text-xl text-slate-700'
+
+                            ui.icon(
+                                'groups'
+                            ).classes(
+                                'text-xl'
                             )
 
-                        ui.label(
-                            'الفرق'
-                        ).classes(
-                            'section-title'
-                        )
+                        with ui.column().classes(
+                            'gap-0'
+                        ):
+
+                            ui.label(
+                                'قائمة الفرق'
+                            ).classes(
+                                'section-title'
+                            )
+
+                            ui.label(
+                                'الفرق التابعة للنادي'
+                            ).classes(
+                                'section-subtitle'
+                            )
 
                     ui.label(
                         f'{teams_count} فريق'
                     ).classes(
-                        'bg-slate-100 text-slate-600 '
-                        'px-3 py-1 rounded-full text-xs font-bold'
+                        'bg-white text-slate-600 border border-slate-200 px-4 py-1 rounded-full text-xs font-bold'
                     )
 
-                if teams:
+                with ui.column().classes(
+                    'w-full p-4 gap-1 h-96 overflow-y-auto'
+                ):
 
-                    with ui.column().classes(
-                        'w-full gap-3'
-                    ):
+                    if teams:
 
                         for team in teams:
 
                             team_name = (
                                 team['TeamAR']
                                 or team['TeamEN']
-                                or 'فريق'
+                                or 'فريق غير مسمى'
                             )
 
                             team_category = (
                                 team['TeamCategoryNameAR']
-                                or 'غير محدد'
+                                or 'فئة غير محددة'
                             )
 
                             sport_name = (
                                 team['SportNameAR']
-                                or 'غير محدد'
+                                or 'رياضة غير محددة'
                             )
 
                             player_count = (
@@ -786,264 +1308,288 @@ def content(club_id=None):
                                 or 0
                             )
 
-                            with ui.element('div').classes(
-                                'team-item w-full p-4'
+                            with ui.row().classes(
+                                'list-item items-center justify-between'
                             ):
 
                                 with ui.row().classes(
-                                    'w-full items-center justify-between'
+                                    'items-center gap-4'
                                 ):
 
-                                    with ui.row().classes(
-                                        'items-center gap-3'
+                                    with ui.element(
+                                        'div'
+                                    ).classes(
+                                        'item-avatar bg-indigo-50 text-indigo-500'
                                     ):
 
-                                        with ui.element('div').classes(
-                                            'w-10 h-10 rounded-xl '
-                                            'bg-blue-50 '
-                                            'flex items-center justify-center'
-                                        ):
-                                            ui.icon(
-                                                'sports_soccer'
-                                            ).classes(
-                                                'text-lg text-blue-600'
-                                            )
-
-                                        with ui.column().classes(
-                                            'gap-0'
-                                        ):
-
-                                            ui.label(
-                                                team_name
-                                            ).classes(
-                                                'font-extrabold '
-                                                'text-slate-800'
-                                            )
-
-                                            ui.label(
-                                                f'{team_category} • {sport_name}'
-                                            ).classes(
-                                                'text-xs text-slate-400 mt-1'
-                                            )
+                                        ui.icon(
+                                            'sports_soccer'
+                                        ).classes(
+                                            'text-xl'
+                                        )
 
                                     with ui.column().classes(
-                                        'items-end gap-0'
+                                        'gap-0'
                                     ):
 
                                         ui.label(
-                                            str(player_count)
+                                            team_name
                                         ).classes(
-                                            'text-xl font-black '
-                                            'text-slate-900'
+                                            'font-bold text-slate-800 text-sm'
                                         )
 
                                         ui.label(
-                                            'لاعب'
+                                            f'{sport_name} • {team_category}'
                                         ).classes(
-                                            'text-xs text-slate-400'
+                                            'text-xs text-slate-500 mt-1'
                                         )
 
-                else:
+                                with ui.column().classes(
+                                    'items-end gap-1'
+                                ):
 
-                    with ui.column().classes(
-                        'w-full items-center py-10'
-                    ):
+                                    ui.label(
+                                        str(player_count)
+                                    ).classes(
+                                        'font-black text-slate-700 text-lg'
+                                    )
 
-                        ui.icon('groups').classes(
-                            'text-5xl text-slate-300'
-                        )
+                                    ui.label(
+                                        'لاعب'
+                                    ).classes(
+                                        'text-[10px] text-slate-400'
+                                    )
 
-                        ui.label(
-                            'لا توجد فرق'
-                        ).classes(
-                            'text-slate-500 font-bold mt-3'
-                        )
+                    else:
 
-            # =================================================
+                        with ui.column().classes(
+                            'w-full h-full items-center justify-center'
+                        ):
+
+                            ui.icon(
+                                'inbox'
+                            ).classes(
+                                'text-6xl text-slate-300'
+                            )
+
+                            ui.label(
+                                'لا توجد فرق مسجلة بعد'
+                            ).classes(
+                                'text-slate-400 font-medium mt-3'
+                            )
+
             # Latest Players
-            # =================================================
-
             with ui.card().classes(
-                'section-card w-full p-5 md:p-6'
+                'section-card p-0 overflow-hidden'
             ):
 
                 with ui.row().classes(
-                    'w-full items-center justify-between mb-5'
+                    'w-full items-center justify-between p-5 bg-slate-50 border-b border-slate-100'
                 ):
 
                     with ui.row().classes(
                         'items-center gap-3'
                     ):
 
-                        with ui.element('div').classes(
-                            'w-11 h-11 rounded-xl bg-blue-50 '
-                            'flex items-center justify-center'
+                        with ui.element(
+                            'div'
+                        ).classes(
+                            'section-icon bg-sky-50 text-sky-600'
                         ):
-                            ui.icon('person').classes(
-                                'text-xl text-blue-600'
+
+                            ui.icon(
+                                'recent_actors'
+                            ).classes(
+                                'text-xl'
                             )
 
-                        ui.label(
-                            'آخر اللاعبين'
-                        ).classes(
-                            'section-title'
-                        )
+                        with ui.column().classes(
+                            'gap-0'
+                        ):
+
+                            ui.label(
+                                'أحدث اللاعبين'
+                            ).classes(
+                                'section-title'
+                            )
+
+                            ui.label(
+                                'آخر اللاعبين المنضمين'
+                            ).classes(
+                                'section-subtitle'
+                            )
 
                     ui.label(
-                        f'{players_count} لاعب'
+                        'آخر 8 لاعبين'
                     ).classes(
-                        'bg-blue-50 text-blue-600 '
-                        'px-3 py-1 rounded-full text-xs font-bold'
+                        'bg-white text-slate-600 border border-slate-200 px-4 py-1 rounded-full text-xs font-bold'
                     )
 
-                if latest_players:
+                with ui.column().classes(
+                    'w-full p-4 gap-1 h-96 overflow-y-auto'
+                ):
 
-                    with ui.column().classes(
-                        'w-full'
-                    ):
+                    if latest_players:
 
                         for player in latest_players:
 
                             player_name = (
                                 player['PlayerNameAR']
-                                or 'لاعب'
+                                or 'غير متوفر'
                             )
 
                             membership_name = (
                                 player['MembershipStatusNameAR']
-                                or 'غير محدد'
+                                or 'حالة غير محددة'
                             )
 
                             medical_name = (
                                 player['MedicalReportStateNameAR']
-                                or 'غير محدد'
+                                or 'لم يتم الفحص'
                             )
 
-                            with ui.element('div').classes(
-                                'player-item w-full'
+                            with ui.row().classes(
+                                'list-item items-center justify-between'
                             ):
 
                                 with ui.row().classes(
-                                    'w-full items-center '
-                                    'justify-between'
+                                    'items-center gap-4'
                                 ):
 
-                                    with ui.row().classes(
-                                        'items-center gap-3'
+                                    with ui.element(
+                                        'div'
+                                    ).classes(
+                                        'item-avatar bg-slate-100 text-slate-500'
                                     ):
 
-                                        with ui.element('div').classes(
-                                            'w-9 h-9 rounded-full '
-                                            'bg-slate-100 '
-                                            'flex items-center justify-center'
-                                        ):
-                                            ui.icon('person').classes(
-                                                'text-lg text-slate-600'
-                                            )
+                                        ui.icon(
+                                            'person'
+                                        ).classes(
+                                            'text-xl'
+                                        )
 
-                                        with ui.column().classes(
-                                            'gap-0'
-                                        ):
-                                            ui.label(
-                                                player_name
-                                            ).classes(
-                                                'font-bold text-slate-800'
-                                            )
+                                    with ui.column().classes(
+                                        'gap-0'
+                                    ):
 
-                                            ui.label(
-                                                f'Membership: {membership_name}'
-                                            ).classes(
-                                                'text-xs text-slate-400 mt-1'
-                                            )
+                                        ui.label(
+                                            player_name
+                                        ).classes(
+                                            'font-bold text-slate-800 text-sm'
+                                        )
 
-                                    ui.badge(
-                                        medical_name
-                                    ).props(
-                                        'outline'
-                                    )
+                                        ui.label(
+                                            membership_name
+                                        ).classes(
+                                            'text-xs text-slate-500 mt-1'
+                                        )
 
-                else:
+                                ui.badge(
+                                    medical_name
+                                ).props(
+                                    'outline color=primary rounded'
+                                ).classes(
+                                    'text-xs px-2 py-1'
+                                )
 
-                    with ui.column().classes(
-                        'w-full items-center py-10'
-                    ):
+                    else:
 
-                        ui.icon('person_off').classes(
-                            'text-5xl text-slate-300'
-                        )
+                        with ui.column().classes(
+                            'w-full h-full items-center justify-center'
+                        ):
 
-                        ui.label(
-                            'لا يوجد لاعبون'
-                        ).classes(
-                            'text-slate-500 font-bold mt-3'
-                        )
+                            ui.icon(
+                                'person_off'
+                            ).classes(
+                                'text-6xl text-slate-300'
+                            )
+
+                            ui.label(
+                                'لا يوجد لاعبون مسجلون بعد'
+                            ).classes(
+                                'text-slate-400 font-medium mt-3'
+                            )
 
         # =====================================================
-        # Quick Actions
+        # QUICK ACTIONS
         # =====================================================
 
         with ui.card().classes(
-            'section-card w-full p-5 md:p-6'
+            'section-card w-full p-6'
         ):
 
             with ui.row().classes(
                 'items-center gap-3 mb-5'
             ):
 
-                with ui.element('div').classes(
-                    'w-11 h-11 rounded-xl bg-amber-50 '
-                    'flex items-center justify-center'
+                with ui.element(
+                    'div'
+                ).classes(
+                    'section-icon bg-amber-50 text-amber-600'
                 ):
-                    ui.icon('bolt').classes(
-                        'text-xl text-amber-600'
+
+                    ui.icon(
+                        'bolt'
+                    ).classes(
+                        'text-xl'
                     )
 
-                ui.label(
-                    'الوصول السريع'
-                ).classes(
-                    'section-title'
-                )
+                with ui.column().classes(
+                    'gap-0'
+                ):
+
+                    ui.label(
+                        'إجراءات سريعة'
+                    ).classes(
+                        'section-title'
+                    )
+
+                    ui.label(
+                        'الوصول السريع إلى أهم أقسام النظام'
+                    ).classes(
+                        'section-subtitle'
+                    )
 
             with ui.row().classes(
-                'w-full flex-wrap gap-3'
+                'w-full grid grid-cols-2 md:grid-cols-4 gap-4'
             ):
 
                 ui.button(
-                    'اللاعبين',
-                    icon='groups',
+                    'إدارة اللاعبين',
+                    icon='manage_accounts',
                     on_click=lambda: ui.navigate.to('/players')
                 ).props(
                     'unelevated no-caps'
                 ).classes(
-                    'bg-slate-900 text-white rounded-xl px-5 py-3'
+                    'quick-action bg-slate-800 text-white'
                 )
 
                 ui.button(
-                    'الفرق',
-                    icon='sports_soccer',
+                    'إدارة الفرق',
+                    icon='account_tree',
                     on_click=lambda: ui.navigate.to('/teams')
                 ).props(
                     'unelevated no-caps'
                 ).classes(
-                    'bg-blue-700 text-white rounded-xl px-5 py-3'
+                    'quick-action bg-sky-600 text-white'
                 )
 
                 ui.button(
                     'التسجيلات',
-                    icon='assignment_ind',
+                    icon='app_registration',
                     on_click=lambda: ui.navigate.to('/registrations')
                 ).props(
                     'unelevated no-caps'
                 ).classes(
-                    'bg-emerald-600 text-white rounded-xl px-5 py-3'
+                    'quick-action bg-emerald-600 text-white'
                 )
 
                 ui.button(
-                    'المعدات',
+                    'المعدات والعهد',
                     icon='inventory_2',
                     on_click=lambda: ui.navigate.to('/equipment')
                 ).props(
                     'unelevated no-caps'
                 ).classes(
-                    'bg-amber-500 text-white rounded-xl px-5 py-3'
+                    'quick-action bg-amber-500 text-white'
                 )
