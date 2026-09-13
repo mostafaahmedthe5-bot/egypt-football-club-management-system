@@ -3,12 +3,82 @@ import database as db
 
 
 # =========================================================
+# CLUB LOGOS
+# =========================================================
+
+def get_club_logo_url(club_name):
+    logos = {
+        'الأهلي': 'https://assets.footylogos.com/logos/al-ahly-sc/al-ahly-sc-logo-footylogos.png',
+        'الزمالك': 'https://assets.footylogos.com/logos/zamalek-sc/zamalek-sc-logo-footylogos.png',
+        'بيراميدز': 'https://assets.footylogos.com/logos/pyramids-fc/pyramids-fc-logo-footylogos.png',
+        'المصري': 'https://assets.footylogos.com/logos/al-masry-sc/al-masry-sc-logo-footylogos.png',
+        'الإسماعيلي': 'https://assets.footylogos.com/logos/ismaily-sc/ismaily-sc-logo-footylogos.png',
+        'الاتحاد السكندري': 'https://assets.footylogos.com/logos/ittihad-alexandria/ittihad-alexandria-logo-footylogos.png',
+        'سموحة': 'https://assets.footylogos.com/logos/smouha/smouha-logo-footylogos.png',
+        'إنبي': 'https://assets.footylogos.com/logos/enppi-sc/enppi-sc-logo-footylogos.png',
+        'البنك الأهلي': 'https://assets.footylogos.com/logos/bank-el-ahly/bank-el-ahly-logo-footylogos.png',
+        'سيراميكا كليوباترا': 'https://assets.footylogos.com/logos/ceramica-cleopatra-fc/ceramica-cleopatra-logo-footylogos.png',
+        'الجونة': 'https://assets.footylogos.com/logos/el-gouna-fc/el-gouna-logo-footylogos.png',
+        'طلائع الجيش': 'https://assets.footylogos.com/logos/talaea-el-geish/talaea-el-geish-logo-footylogos.png',
+        'مودرن سبورت': 'https://assets.footylogos.com/logos/modern-sport/modern-sport-logo-footylogos.png',
+        'زد': 'https://assets.footylogos.com/logos/zed-fc/zed-fc-logo-footylogos.png',
+        'المقاولون العرب': 'https://assets.footylogos.com/logos/el-mokawloon/el-mokawloon-logo-footylogos.png',
+        'وادي دجلة': 'https://assets.footylogos.com/logos/wadi-degla-sc/wadi-degla-logo-footylogos.png',
+        'غزل المحلة': 'https://assets.footylogos.com/logos/ghazl-el-mahalla/ghazl-el-mahalla-logo-footylogos.png',
+        'فاركو': 'https://assets.footylogos.com/logos/pharco-fc/pharco-fc-logo-footylogos.png',
+        'حرس الحدود': 'https://assets.footylogos.com/logos/harras-hodoud/harras-hodoud-logo-footylogos.png',
+        'بتروجيت': 'https://assets.footylogos.com/logos/petrojet-fc/petrojet-fc-logo-footylogos.png',
+        'كهرباء الإسماعيلية': None,
+    }
+
+    return logos.get(club_name)
+
+
+# =========================================================
+# CLUB TEAM PHOTOS
+# =========================================================
+
+def get_club_team_photo_url(club_name):
+    team_photos = {
+        'الأهلي': 'https://mediaaws-live.almasryalyoum.com/almasryalyoum/uploads/images/2026/02/28/thumbs/600x600/1652556.jpg',
+        'الزمالك': 'https://img.btolat.com/2026/8/26/news/408598/large.jpg',
+        'بيراميدز': 'https://assets.kooora.com/images/v3/getty-2241502137/crop/MM5DINJWHA5DENJXGA5G433XMU5DAORVGQZQ%3D%3D%3D%3D/GettyImages-2241502137.jpg?upscale=true&width=1400',
+        'المصري': 'https://cdn.footballkitarchive.com/2025/08/16/SJ9EsdhLqv00LYu.jpg',
+        'الإسماعيلي': 'https://gate.ahram.org.eg/Media/News/2026/2/22/19_2026-639073872925408457-540.jpg',
+        'الاتحاد السكندري': 'https://media.egypttelegraph.com/2024/5/large/2816857328732202405140838433843.jpg',
+        'سموحة': 'https://gate.ahram.org.eg/Media/News/2021/3/12/19_2021-637511660578110818-811.jpg',
+        'إنبي': None,
+        'البنك الأهلي': 'https://sportcdn.elwatannews.com/sport/537x389/6296324251755267957.jpg',
+        'سيراميكا كليوباترا': None,
+        'الجونة': 'https://assets.kooora.com/images/v3/kooora_816777_1/koo_110409.jpg?auto=webp&format=pjpg&quality=60&width=1320',
+        'طلائع الجيش': 'https://img.btolat.com/2022/8/17/news/292086/large.jpg',
+        'مودرن سبورت': 'https://gate.ahram.org.eg/Media/News/2025/8/9/19_2025-638903754105204016-520.jpeg',
+        'زد': 'https://cdn.korabia.net/images/1200x667/2023/%D9%81%D8%B1%D9%8A%D9%82-%D8%B2%D8%AF1701348086.webp',
+        'المقاولون العرب': 'https://aws-br-images.s3.us-east-2.amazonaws.com/upload/iblock/0bb/0bb3375257da9d00dc55d9d48a74843d.jpg',
+        'وادي دجلة': 'https://koraplus.com/images/2025/8/large/1644140042104202508160520342034.jpg',
+        'غزل المحلة': 'https://mediaaws-live.almasryalyoum.com/AMAYLivePictures/portalimages/news/original/2025/08/10/2742503_0.jpg',
+        'فاركو': 'https://media.egypttelegraph.com/2024/7/large/28243251869320240708090941941.jpg',
+        'حرس الحدود': 'https://media.elbalad.news/2024/10/large/838/5/181.jpg',
+        'بتروجيت': 'https://cdn.dailysports.net/dailysports/20260223/82dcfee5426da77f59ff6044a60b5b0cb80409300cd5fe08dfc95f890c5b098f-1200-675.webp',
+        'كهرباء الإسماعيلية': 'https://img.btolat.com/2026/5/4/news/399815/large.jpg',
+    }
+
+    return team_photos.get(club_name)
+
+
+# =========================================================
 # HELPERS
 # =========================================================
 
 def _table_columns(table_name):
-    rows = db.fetch_all(f'PRAGMA table_info("{table_name}")')
-    return [row['name'] for row in rows]
+    rows = db.fetch_all(
+        f'PRAGMA table_info("{table_name}")'
+    )
+
+    return [
+        row['name']
+        for row in rows
+    ]
 
 
 def _first_existing_column(table_name, candidates):
@@ -93,19 +163,28 @@ def get_membership_types():
     return rows
 
 
-def get_players(club_id, search_value='', status_id='all', type_id='all'):
+def get_players(
+    club_id,
+    search_value='',
+    status_id='all',
+    type_id='all'
+):
     status_name_column = get_membership_status_column()
     type_name_column = get_membership_type_column()
 
     if not status_name_column:
         status_name_sql = "''"
     else:
-        status_name_sql = f's."{status_name_column}"'
+        status_name_sql = (
+            f's."{status_name_column}"'
+        )
 
     if not type_name_column:
         type_name_sql = "''"
     else:
-        type_name_sql = f'mt."{type_name_column}"'
+        type_name_sql = (
+            f'mt."{type_name_column}"'
+        )
 
     query = f'''
         SELECT
@@ -146,7 +225,9 @@ def get_players(club_id, search_value='', status_id='all', type_id='all'):
             )
         '''
 
-        search_pattern = f'%{search_value}%'
+        search_pattern = (
+            f'%{search_value}%'
+        )
 
         params.extend([
             search_pattern,
@@ -154,19 +235,31 @@ def get_players(club_id, search_value='', status_id='all', type_id='all'):
             search_pattern
         ])
 
-    if status_id not in (None, '', 'all'):
+    if status_id not in (
+        None,
+        '',
+        'all'
+    ):
         query += '''
             AND p.MembershipStatueId = ?
         '''
 
-        params.append(int(status_id))
+        params.append(
+            int(status_id)
+        )
 
-    if type_id not in (None, '', 'all'):
+    if type_id not in (
+        None,
+        '',
+        'all'
+    ):
         query += '''
             AND p.MembershipTypeId = ?
         '''
 
-        params.append(int(type_id))
+        params.append(
+            int(type_id)
+        )
 
     query += '''
         ORDER BY
@@ -220,10 +313,22 @@ def get_membership_statistics(club_id):
     )
 
     return {
-        'total': total['Count'] if total else 0,
-        'active': active['Count'] if active else 0,
-        'suspended': suspended['Count'] if suspended else 0,
-        'expired': expired['Count'] if expired else 0,
+        'total': (
+            total['Count']
+            if total else 0
+        ),
+        'active': (
+            active['Count']
+            if active else 0
+        ),
+        'suspended': (
+            suspended['Count']
+            if suspended else 0
+        ),
+        'expired': (
+            expired['Count']
+            if expired else 0
+        ),
     }
 
 
@@ -232,11 +337,16 @@ def get_membership_statistics(club_id):
 # =========================================================
 
 def content(club_id=None):
+
     if club_id is None:
-        club_id = app.storage.user.get('club_id')
+        club_id = app.storage.user.get(
+            'club_id'
+        )
 
     if not club_id:
-        ui.navigate.to('/select_club')
+        ui.navigate.to(
+            '/select_club'
+        )
         return
 
     club = db.fetch_one(
@@ -257,7 +367,9 @@ def content(club_id=None):
             color='negative'
         )
 
-        ui.navigate.to('/select_club')
+        ui.navigate.to(
+            '/select_club'
+        )
         return
 
     club_name_ar = (
@@ -270,8 +382,49 @@ def content(club_id=None):
         or ''
     )
 
+    club_logo_url = (
+        get_club_logo_url(
+            club_name_ar
+        )
+    )
+
+    team_photo_url = (
+        get_club_team_photo_url(
+            club_name_ar
+        )
+    )
+
     statuses = get_statuses()
-    membership_types = get_membership_types()
+
+    membership_types = (
+        get_membership_types()
+    )
+
+    # =====================================================
+    # HERO BACKGROUND
+    # =====================================================
+
+    hero_style = ''
+
+    if team_photo_url:
+
+        hero_style = f'''
+            background-image:
+                linear-gradient(
+                    90deg,
+                    rgba(15, 23, 42, 0.90),
+                    rgba(15, 23, 42, 0.70),
+                    rgba(15, 23, 42, 0.38)
+                ),
+                url("{team_photo_url}");
+            background-size: cover;
+            background-position: center 35%;
+            background-repeat: no-repeat;
+        '''
+
+    # =====================================================
+    # CSS
+    # =====================================================
 
     ui.add_head_html(
         '''
@@ -290,53 +443,112 @@ def content(club_id=None):
                 margin: 0 auto;
             }
 
+            /* ============================================
+               FOOTBALL HEADER
+               ============================================ */
+
             .memberships-header {
                 width: 100%;
-                padding: 28px 30px;
+                min-height: 245px;
+                padding: 30px;
+                position: relative;
+                overflow: hidden;
                 border-radius: 24px;
-                background: linear-gradient(
-                    135deg,
-                    #0f172a 0%,
-                    #172554 55%,
-                    #1e3a8a 100%
-                );
-                border: 1px solid rgba(255,255,255,.08);
-                box-shadow: 0 14px 35px rgba(15,23,42,.12);
+                background-color: #0f172a;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                border: 1px solid rgba(255,255,255,.10);
+                box-shadow:
+                    0 18px 45px
+                    rgba(15,23,42,.20);
+            }
+
+            .memberships-header::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        circle at 85% 20%,
+                        rgba(245,158,11,.16),
+                        transparent 28%
+                    );
+            }
+
+            .memberships-header-content {
+                position: relative;
+                z-index: 2;
             }
 
             .memberships-header-icon {
-                width: 62px;
-                height: 62px;
+                width: 64px;
+                height: 64px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-radius: 17px;
-                background: rgba(255,255,255,.08);
-                border: 1px solid rgba(255,255,255,.12);
+                border-radius: 18px;
+                background: rgba(255,255,255,.10);
+                border: 1px solid rgba(255,255,255,.18);
+                backdrop-filter: blur(8px);
+                box-shadow:
+                    0 10px 25px
+                    rgba(0,0,0,.18);
+            }
+
+            .memberships-club-logo {
+                width: 88px;
+                height: 88px;
+                padding: 10px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 23px;
+                background: rgba(255,255,255,.96);
+                border: 2px solid
+                    rgba(255,255,255,.55);
+                box-shadow:
+                    0 14px 35px
+                    rgba(0,0,0,.28);
+                backdrop-filter: blur(8px);
+            }
+
+            .memberships-club-logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
             }
 
             .memberships-title {
                 color: white;
-                font-size: 29px;
+                font-size: 30px;
                 font-weight: 900;
                 line-height: 1.3;
+                text-shadow:
+                    0 3px 12px
+                    rgba(0,0,0,.30);
             }
 
             .memberships-club {
-                color: #67e8f9;
-                font-size: 18px;
-                font-weight: 800;
+                color: white;
+                font-size: 20px;
+                font-weight: 900;
+                text-shadow:
+                    0 2px 10px
+                    rgba(0,0,0,.30);
             }
 
             .memberships-en {
-                color: #94a3b8;
+                color: rgba(255,255,255,.65);
                 font-size: 10px;
                 letter-spacing: 2px;
                 font-weight: 700;
             }
 
             .memberships-description {
-                color: #cbd5e1;
+                color: rgba(255,255,255,.82);
                 font-size: 13px;
                 line-height: 1.8;
             }
@@ -345,13 +557,17 @@ def content(club_id=None):
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
-                padding: 8px 14px;
+                padding: 9px 15px;
                 border-radius: 999px;
-                background: rgba(245,158,11,.10);
-                border: 1px solid rgba(245,158,11,.18);
+                background: rgba(15,23,42,.58);
+                border: 1px solid
+                    rgba(255,255,255,.16);
                 color: #fef3c7;
                 font-size: 11px;
                 font-weight: 800;
+                backdrop-filter: blur(8px);
+                position: relative;
+                z-index: 3;
             }
 
             .memberships-dot {
@@ -359,7 +575,23 @@ def content(club_id=None):
                 height: 7px;
                 border-radius: 50%;
                 background: #fbbf24;
+                box-shadow:
+                    0 0 10px
+                    rgba(251,191,36,.65);
             }
+
+            .football-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                color: rgba(255,255,255,.72);
+                font-size: 11px;
+                font-weight: 750;
+            }
+
+            /* ============================================
+               STATISTICS
+               ============================================ */
 
             .stat-card {
                 width: 100%;
@@ -369,7 +601,9 @@ def content(club_id=None):
                 background: white;
                 border: 1px solid #e2e8f0;
                 border-radius: 19px;
-                box-shadow: 0 6px 20px rgba(15,23,42,.04);
+                box-shadow:
+                    0 6px 20px
+                    rgba(15,23,42,.04);
             }
 
             .stat-card::before {
@@ -425,12 +659,18 @@ def content(club_id=None):
                 border-radius: 14px;
             }
 
+            /* ============================================
+               FILTERS
+               ============================================ */
+
             .filter-card {
                 width: 100%;
                 background: white;
                 border: 1px solid #e2e8f0;
                 border-radius: 19px;
-                box-shadow: 0 6px 18px rgba(15,23,42,.035);
+                box-shadow:
+                    0 6px 18px
+                    rgba(15,23,42,.035);
             }
 
             .field-label {
@@ -452,13 +692,19 @@ def content(club_id=None):
                 font-weight: 800 !important;
             }
 
+            /* ============================================
+               TABLE
+               ============================================ */
+
             .table-card {
                 width: 100%;
                 background: white;
                 border: 1px solid #e2e8f0;
                 border-radius: 21px;
                 overflow: hidden;
-                box-shadow: 0 7px 22px rgba(15,23,42,.045);
+                box-shadow:
+                    0 7px 22px
+                    rgba(15,23,42,.045);
             }
 
             .table-header {
@@ -472,6 +718,13 @@ def content(club_id=None):
                 padding: 13px 18px;
                 background: white;
                 border-bottom: 1px solid #f1f5f9;
+                transition:
+                    background .18s ease,
+                    transform .18s ease;
+            }
+
+            .table-row:hover {
+                background: #f8fafc;
             }
 
             .table-row:last-child {
@@ -557,6 +810,10 @@ def content(club_id=None):
                 color: #2563eb !important;
             }
 
+            /* ============================================
+               EMPTY STATE
+               ============================================ */
+
             .empty-state {
                 min-height: 280px;
             }
@@ -571,6 +828,10 @@ def content(club_id=None):
                 background: #f8fafc;
                 border: 1px solid #e2e8f0;
             }
+
+            /* ============================================
+               DIALOG
+               ============================================ */
 
             .dialog-card {
                 width: 560px;
@@ -597,7 +858,8 @@ def content(club_id=None):
                 justify-content: center;
                 border-radius: 14px;
                 background: rgba(255,255,255,.08);
-                border: 1px solid rgba(255,255,255,.10);
+                border: 1px solid
+                    rgba(255,255,255,.10);
             }
 
             .dialog-title {
@@ -622,13 +884,24 @@ def content(club_id=None):
                 font-weight: 850 !important;
             }
 
+            /* ============================================
+               RESPONSIVE
+               ============================================ */
+
             @media (max-width: 900px) {
+
                 .memberships-header {
                     padding: 24px;
+                    min-height: 220px;
                 }
 
                 .memberships-title {
                     font-size: 25px;
+                }
+
+                .memberships-club-logo {
+                    width: 72px;
+                    height: 72px;
                 }
 
                 .table-row {
@@ -637,17 +910,29 @@ def content(club_id=None):
             }
 
             @media (max-width: 650px) {
+
                 .memberships-header {
                     padding: 20px;
                     border-radius: 18px;
+                    min-height: 250px;
                 }
 
                 .memberships-title {
                     font-size: 22px;
                 }
 
+                .memberships-club {
+                    font-size: 17px;
+                }
+
                 .memberships-description {
                     font-size: 11px;
+                }
+
+                .memberships-club-logo {
+                    width: 62px;
+                    height: 62px;
+                    border-radius: 17px;
                 }
 
                 .table-row {
@@ -662,14 +947,19 @@ def content(club_id=None):
         '''
     )
 
-    stats = get_membership_statistics(club_id)
+    stats = get_membership_statistics(
+        club_id
+    )
 
     status_options = {
         'all': 'كل الحالات'
     }
 
     for row in statuses:
-        status_options[str(row['Id'])] = (
+
+        status_options[
+            str(row['Id'])
+        ] = (
             row['Name']
             or f"الحالة {row['Id']}"
         )
@@ -679,14 +969,17 @@ def content(club_id=None):
     }
 
     for row in membership_types:
-        type_options[str(row['Id'])] = (
+
+        type_options[
+            str(row['Id'])
+        ] = (
             row['Name']
             or f"النوع {row['Id']}"
         )
 
-    # =========================================================
+    # =====================================================
     # PAGE
-    # =========================================================
+    # =====================================================
 
     with ui.column().classes(
         'memberships-page w-full p-4 md:p-6 lg:p-8'
@@ -700,55 +993,130 @@ def content(club_id=None):
             # HEADER
             # =================================================
 
-            with ui.element('div').classes(
+            with ui.element(
+                'div'
+            ).classes(
                 'memberships-header'
+            ).style(
+                hero_style
             ):
 
-                with ui.row().classes(
-                    'w-full items-center justify-between flex-wrap gap-6'
+                with ui.column().classes(
+                    'memberships-header-content w-full gap-5'
                 ):
 
                     with ui.row().classes(
-                        'items-center gap-4'
+                        'w-full items-center justify-between flex-wrap gap-6'
                     ):
 
-                        with ui.element('div').classes(
-                            'memberships-header-icon'
+                        with ui.row().classes(
+                            'items-center gap-4'
                         ):
+
+                            # ---------------------------------
+                            # CLUB LOGO
+                            # ---------------------------------
+
+                            if club_logo_url:
+
+                                with ui.element(
+                                    'div'
+                                ).classes(
+                                    'memberships-club-logo'
+                                ):
+
+                                    ui.image(
+                                        club_logo_url
+                                    ).classes(
+                                        'w-full h-full object-contain'
+                                    )
+
+                            else:
+
+                                with ui.element(
+                                    'div'
+                                ).classes(
+                                    'memberships-header-icon'
+                                ):
+
+                                    ui.icon(
+                                        'sports_soccer'
+                                    ).classes(
+                                        'text-3xl text-white'
+                                    )
+
+                            # ---------------------------------
+                            # TITLE
+                            # ---------------------------------
+
+                            with ui.column().classes(
+                                'gap-1'
+                            ):
+
+                                ui.label(
+                                    'إدارة العضويات'
+                                ).classes(
+                                    'memberships-title'
+                                )
+
+                                ui.label(
+                                    club_name_ar
+                                ).classes(
+                                    'memberships-club'
+                                )
+
+                                if club_name_en:
+
+                                    ui.label(
+                                        club_name_en
+                                    ).classes(
+                                        'memberships-en'
+                                    )
+
+                        # -------------------------------------
+                        # BADGE
+                        # -------------------------------------
+
+                        with ui.element(
+                            'div'
+                        ).classes(
+                            'memberships-badge'
+                        ):
+
+                            ui.element(
+                                'span'
+                            ).classes(
+                                'memberships-dot'
+                            )
 
                             ui.icon(
-                                'card_membership'
+                                'sports_soccer'
                             ).classes(
-                                'text-3xl text-white'
-                            )
-
-                        with ui.column().classes(
-                            'gap-1'
-                        ):
-
-                            ui.label(
-                                'إدارة العضويات'
-                            ).classes(
-                                'memberships-title'
+                                'text-sm text-amber-300'
                             )
 
                             ui.label(
-                                club_name_ar
-                            ).classes(
-                                'memberships-club'
+                                'Football Club Management'
                             )
 
-                           
-                    with ui.element('div').classes(
-                        'memberships-badge'
+                    # -----------------------------------------
+                    # DESCRIPTION
+                    # -----------------------------------------
+
+                    with ui.row().classes(
+                        'items-center gap-3'
                     ):
 
-                        ui.element('span').classes(
-                            'memberships-dot'
+                        ui.icon(
+                            'groups'
+                        ).classes(
+                            'text-lg text-amber-300'
                         )
 
                         ui.label(
-                            'Membership Management'
+                            'إدارة ومتابعة عضويات لاعبي النادي والفرق الرياضية'
+                        ).classes(
+                            'memberships-description'
                         )
 
             # =================================================
@@ -758,6 +1126,10 @@ def content(club_id=None):
             with ui.row().classes(
                 'w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'
             ):
+
+                # ---------------------------------------------
+                # TOTAL
+                # ---------------------------------------------
 
                 with ui.card().classes(
                     'stat-card stat-blue p-5'
@@ -783,7 +1155,9 @@ def content(club_id=None):
                                 'stat-number'
                             )
 
-                        with ui.element('div').classes(
+                        with ui.element(
+                            'div'
+                        ).classes(
                             'stat-icon bg-blue-50'
                         ):
 
@@ -798,6 +1172,10 @@ def content(club_id=None):
                     ).classes(
                         'stat-description mt-4'
                     )
+
+                # ---------------------------------------------
+                # ACTIVE
+                # ---------------------------------------------
 
                 with ui.card().classes(
                     'stat-card stat-green p-5'
@@ -823,7 +1201,9 @@ def content(club_id=None):
                                 'stat-number'
                             )
 
-                        with ui.element('div').classes(
+                        with ui.element(
+                            'div'
+                        ).classes(
                             'stat-icon bg-emerald-50'
                         ):
 
@@ -838,6 +1218,10 @@ def content(club_id=None):
                     ).classes(
                         'stat-description mt-4'
                     )
+
+                # ---------------------------------------------
+                # SUSPENDED
+                # ---------------------------------------------
 
                 with ui.card().classes(
                     'stat-card stat-amber p-5'
@@ -863,7 +1247,9 @@ def content(club_id=None):
                                 'stat-number'
                             )
 
-                        with ui.element('div').classes(
+                        with ui.element(
+                            'div'
+                        ).classes(
                             'stat-icon bg-amber-50'
                         ):
 
@@ -878,6 +1264,10 @@ def content(club_id=None):
                     ).classes(
                         'stat-description mt-4'
                     )
+
+                # ---------------------------------------------
+                # EXPIRED
+                # ---------------------------------------------
 
                 with ui.card().classes(
                     'stat-card stat-red p-5'
@@ -903,7 +1293,9 @@ def content(club_id=None):
                                 'stat-number'
                             )
 
-                        with ui.element('div').classes(
+                        with ui.element(
+                            'div'
+                        ).classes(
                             'stat-icon bg-red-50'
                         ):
 
@@ -1016,7 +1408,9 @@ def content(club_id=None):
                     'dialog-card'
                 ):
 
-                    with ui.element('div').classes(
+                    with ui.element(
+                        'div'
+                    ).classes(
                         'dialog-header'
                     ):
 
@@ -1024,7 +1418,9 @@ def content(club_id=None):
                             'items-center gap-3'
                         ):
 
-                            with ui.element('div').classes(
+                            with ui.element(
+                                'div'
+                            ).classes(
                                 'dialog-icon'
                             ):
 
@@ -1141,6 +1537,10 @@ def content(club_id=None):
                         'table-card'
                     ):
 
+                        # -------------------------------------
+                        # TABLE HEADER
+                        # -------------------------------------
+
                         with ui.row().classes(
                             'table-header w-full items-center justify-between p-5'
                         ):
@@ -1149,7 +1549,9 @@ def content(club_id=None):
                                 'items-center gap-3'
                             ):
 
-                                with ui.element('div').classes(
+                                with ui.element(
+                                    'div'
+                                ).classes(
                                     'w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center'
                                 ):
 
@@ -1181,13 +1583,19 @@ def content(club_id=None):
                                 'px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[11px] font-black'
                             )
 
+                        # -------------------------------------
+                        # EMPTY
+                        # -------------------------------------
+
                         if not players:
 
                             with ui.column().classes(
                                 'empty-state w-full items-center justify-center'
                             ):
 
-                                with ui.element('div').classes(
+                                with ui.element(
+                                    'div'
+                                ).classes(
                                     'empty-icon'
                                 ):
 
@@ -1211,9 +1619,9 @@ def content(club_id=None):
 
                             return
 
-                        # =====================================
+                        # -------------------------------------
                         # TABLE HEADERS
-                        # =====================================
+                        # -------------------------------------
 
                         with ui.row().classes(
                             'w-full items-center px-5 py-3 bg-white border-b border-slate-100'
@@ -1249,9 +1657,9 @@ def content(club_id=None):
                                 'w-24 text-center text-xs font-black text-slate-400'
                             )
 
-                        # =====================================
+                        # -------------------------------------
                         # ROWS
-                        # =====================================
+                        # -------------------------------------
 
                         for player in players:
 
@@ -1284,31 +1692,60 @@ def content(club_id=None):
                             )
 
                             status_id = (
-                                player['MembershipStatueId']
+                                player[
+                                    'MembershipStatueId'
+                                ]
                             )
 
-                            # =================================
-                            # Status Styling
-                            # =================================
+                            # ---------------------------------
+                            # STATUS COLOR
+                            # ---------------------------------
 
                             if status_id == 1:
-                                status_class = 'membership-chip chip-green'
-                            elif status_id == 2:
-                                status_class = 'membership-chip chip-amber'
-                            elif status_id in (3, 4, 6):
-                                status_class = 'membership-chip chip-red'
-                            elif status_id == 5:
-                                status_class = 'membership-chip chip-blue'
-                            else:
-                                status_class = 'membership-chip chip-slate'
 
-                            # =================================
+                                status_class = (
+                                    'membership-chip chip-green'
+                                )
+
+                            elif status_id == 2:
+
+                                status_class = (
+                                    'membership-chip chip-amber'
+                                )
+
+                            elif status_id in (
+                                3,
+                                4,
+                                6
+                            ):
+
+                                status_class = (
+                                    'membership-chip chip-red'
+                                )
+
+                            elif status_id == 5:
+
+                                status_class = (
+                                    'membership-chip chip-blue'
+                                )
+
+                            else:
+
+                                status_class = (
+                                    'membership-chip chip-slate'
+                                )
+
+                            # ---------------------------------
                             # ROW
-                            # =================================
+                            # ---------------------------------
 
                             with ui.row().classes(
                                 'table-row items-center gap-4'
                             ):
+
+                                # =============================
+                                # PLAYER
+                                # =============================
 
                                 with ui.row().classes(
                                     'flex-1 min-w-0 items-center gap-3'
@@ -1350,6 +1787,10 @@ def content(club_id=None):
                                             'player-id mt-1'
                                         )
 
+                                # =============================
+                                # TEAM
+                                # =============================
+
                                 with ui.row().classes(
                                     'w-48 justify-center'
                                 ):
@@ -1359,6 +1800,10 @@ def content(club_id=None):
                                     ).classes(
                                         'text-xs font-bold text-slate-600 text-center'
                                     )
+
+                                # =============================
+                                # STATUS
+                                # =============================
 
                                 with ui.row().classes(
                                     'w-40 justify-center'
@@ -1370,6 +1815,10 @@ def content(club_id=None):
                                         status_class
                                     )
 
+                                # =============================
+                                # TYPE
+                                # =============================
+
                                 with ui.row().classes(
                                     'w-44 justify-center'
                                 ):
@@ -1379,6 +1828,10 @@ def content(club_id=None):
                                     ).classes(
                                         'membership-chip chip-blue'
                                     )
+
+                                # =============================
+                                # ACTION
+                                # =============================
 
                                 with ui.row().classes(
                                     'w-24 justify-center'
@@ -1393,8 +1846,12 @@ def content(club_id=None):
                                         )
 
                                         edit_player_name.value = (
-                                            player_data['PlayerNameAR']
-                                            or player_data['PlayerNameEN']
+                                            player_data[
+                                                'PlayerNameAR'
+                                            ]
+                                            or player_data[
+                                                'PlayerNameEN'
+                                            ]
                                             or ''
                                         )
 
@@ -1462,7 +1919,11 @@ def content(club_id=None):
                     edit_type.value
                 )
 
-                if status_value in (None, '', 'all'):
+                if status_value in (
+                    None,
+                    '',
+                    'all'
+                ):
 
                     ui.notify(
                         'اختر حالة العضوية',
@@ -1471,7 +1932,11 @@ def content(club_id=None):
 
                     return
 
-                if type_value in (None, '', 'all'):
+                if type_value in (
+                    None,
+                    '',
+                    'all'
+                ):
 
                     ui.notify(
                         'اختر نوع العضوية',

@@ -34,51 +34,72 @@ def content():
 
     ui.add_head_html('''
         <style>
-            .clubs-page {
+            /* إزالة هوامش الصفحة وحواف NiceGUI كلياً */
+            html, body, #app, .q-layout, .q-page-container, .q-page {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                min-height: 100vh !important;
+                overflow-x: hidden;
+            }
+
+            /* استخدام رابط الصورة الخاص بك مع تدرج لوني خفيف لإبراز النصوص */
+            body {
+                background-color: #0b1329 !important;
+                background-image: 
+                    linear-gradient(to bottom, rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.85)),
+                    url('https://imgs.search.brave.com/BzO8Rt9REFyhlH67zRUECw0iPCXflK9eQ2upLcJaIcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMDMv/Mzg2LzM1My9zbWFs/bC9mb290YmFsbC1z/dGFkaXVtLWxpZ2h0/aW5nLWZyZWUtcGhv/dG8uanBn') !important;
+                background-size: cover !important;
+                background-position: center center !important;
+                background-attachment: fixed !important;
+                background-repeat: no-repeat !important;
+            }
+
+            .clubs-container {
                 min-height: 100vh;
-                background:
-    radial-gradient(circle at 10% 10%, rgba(214,194,163,.18), transparent 30%),
-    radial-gradient(circle at 90% 20%, rgba(184,159,122,.14), transparent 30%),
-    linear-gradient(135deg, #F7F3EC 0%, #EDE3D3 100%);
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 20px;
+            }
 
             .clubs-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
+                gap: 24px;
                 width: 100%;
-                max-width: 1280px;
+                max-width: 1200px;
             }
 
             @media (max-width: 1024px) {
-                .clubs-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
+                .clubs-grid { grid-template-columns: repeat(3, 1fr); }
             }
 
             @media (max-width: 768px) {
-                .clubs-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
+                .clubs-grid { grid-template-columns: repeat(2, 1fr); }
             }
 
             @media (max-width: 480px) {
-                .clubs-grid {
-                    grid-template-columns: repeat(1, 1fr);
-                }
+                .clubs-grid { grid-template-columns: repeat(1, 1fr); }
             }
-.club-btn {
-    width: 100% !important;
-    height: 235px !important;
-    background: white !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 24px !important;
-    box-shadow: 0 8px 30px rgba(15,23,42,.07) !important;
-}
+
+            /* كروت أنيقة وشبه شفافة تظهر جمال الخلفية */
+            .club-btn {
+                width: 100% !important;
+                height: 220px !important;
+                background: rgba(15, 23, 42, 0.75) !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                border-radius: 18px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
 
             .club-btn:hover {
-                transform: translateY(-8px) !important;
-                box-shadow: 0 18px 45px rgba(15,23,42,.15) !important;
+                transform: translateY(-6px) scale(1.02) !important;
                 border-color: #f59e0b !important;
+                background: rgba(30, 41, 59, 0.9) !important;
+                box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4) !important;
             }
 
             .club-btn .q-btn__content {
@@ -88,67 +109,50 @@ def content():
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 12px;
-            }
-
-            .club-icon {
-                width: 72px;
-                height: 72px;
-                border-radius: 20px;
-                background: linear-gradient(135deg, #0f172a, #1e293b);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 32px;
-                box-shadow: 0 8px 20px rgba(15,23,42,.18);
+                gap: 10px;
             }
 
             .club-name {
-                color: #0f172a;
-                font-size: 19px;
+                color: #ffffff;
+                font-size: 20px;
                 font-weight: 800;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             }
 
             .login-text {
-                color: #64748b;
+                color: #cbd5e1;
                 font-size: 13px;
                 font-weight: 600;
-            }
-
-            .hero-title {
-                background: linear-gradient(90deg, #0f172a, #1e3a8a);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
             }
         </style>
     ''')
 
-    with ui.column().classes('clubs-page w-full items-center p-6 md:p-10'):
-        # Header
-        with ui.column().classes('items-center text-center mb-10'):
+    with ui.element('div').classes('clubs-container'):
+        # الهيدر والشعار الرئيسي
+        with ui.column().classes('items-center text-center mb-8'):
             with ui.element('div').classes(
-                'w-20 h-20 rounded-3xl bg-slate-900 flex items-center justify-center shadow-xl mb-5'
+                'w-32 h-32 rounded-3xl bg-white border border-slate-700 flex items-center justify-center shadow-2xl mb-3'
             ):
-                 ui.image(
-                'https://image.pngaaa.com/856/449856-middle.png'
-            ).classes('w-20 h-20 object-contain')
+                ui.image(
+                    'https://imgs.search.brave.com/kjpGtjdXYb6_IVbYia_lNxN0-a0MguZhhvw4Znb8fdo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXlrLmdlbWluaS5t/ZWRpYS9pbWcveWFs/bGFrb3JhL3RvdXJs/b2dvL0VQTExvZ28x/OS05LTIwMjMtMTYt/MzEtMjEucG5n'
+                ).classes('w-28 h-28 object-contain')
 
             with ui.row().classes(
-                'items-center gap-2 mt-4 bg-white px-5 py-2 rounded-full shadow-sm border border-slate-200'
+                'items-center gap-2 bg-slate-900/90 border border-slate-700 px-5 py-2 rounded-full shadow-lg'
             ):
-                ui.icon('groups').classes('text-amber-500')
-                ui.label(f'{len(clubs)}    نادي ').classes(
-                    'text-slate-700 font-bold'
+                ui.icon('groups').classes('text-amber-400 text-lg')
+                ui.label(f'{len(clubs)} نادي').classes(
+                    'text-white font-bold tracking-wide'
                 )
 
-        # Clubs
+        # شبكة الأندية
         if not clubs:
             with ui.column().classes(
-                'items-center justify-center bg-white rounded-3xl p-12 shadow-sm border border-slate-200'
+                'items-center justify-center bg-slate-900/90 rounded-3xl p-10 border border-slate-700'
             ):
-                ui.icon('sports_soccer').classes('text-6xl text-slate-300')
+                ui.icon('sports_soccer').classes('text-6xl text-slate-500')
                 ui.label('لا توجد أندية حاليًا').classes(
-                    'text-xl font-bold text-slate-600 mt-4'
+                    'text-xl font-bold text-slate-300 mt-4'
                 )
         else:
             with ui.element('div').classes('clubs-grid'):
@@ -166,26 +170,26 @@ def content():
                         )
                     ).props('flat no-caps').classes('club-btn'):
 
-                        with ui.element('div').classes('club-icon'):
+                        with ui.element('div').classes(
+                            'w-20 h-20 flex items-center justify-center'
+                        ):
                             if logo_url:
                                 ui.image(logo_url).classes(
-                                    'w-16 h-16 object-contain'
+                                    'w-20 h-20 object-contain'
                                 )
                             else:
                                 ui.icon('sports_soccer').classes(
-                                    'text-4xl text-white'
+                                    'text-5xl text-slate-400'
                                 )
 
                         ui.label(c_name).classes('club-name')
 
-                        with ui.row().classes('items-center gap-1'):
-                            ui.icon('login').classes('text-amber-500 text-sm')
+                        with ui.row().classes('items-center gap-1.5'):
+                            ui.icon('login').classes('text-amber-400 text-sm')
                             ui.label('تسجيل الدخول').classes('login-text')
 
-        with ui.column().classes('items-center mt-12'):
-            ui.label('Egypt Football Club Management System').classes(
-                'text-slate-400 text-sm font-medium'
-            )
-            ui.label('نظام إدارة الأندية الرياضية').classes(
-                'text-slate-400 text-xs mt-1'
+        # الفوتر
+        with ui.column().classes('items-center mt-10 text-center'):
+            ui.label('Egyptian Premier League Management').classes(
+                'text-slate-300 text-sm font-semibold tracking-wider'
             )

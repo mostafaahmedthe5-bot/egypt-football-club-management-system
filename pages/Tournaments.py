@@ -71,44 +71,56 @@ def content(club_id=None):
                 margin: 0 auto;
             }
 
-            .tournaments-header {
-                width: 100%;
-                position: relative;
-                overflow: hidden;
-                border-radius: 24px;
-                padding: 28px 30px;
-                background: #B49A5A;
-                border: 1px solid rgba(255,255,255,.08);
-                box-shadow: 0 14px 35px rgba(15,23,42,.13);
-            }
+.tournaments-header {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 28px 30px;
 
-            .tournaments-header::before {
-                content: "";
-                position: absolute;
-                width: 280px;
-                height: 280px;
-                top: -170px;
-                left: -80px;
-                border-radius: 50%;
-                background: rgba(255,255,255,.035);
-            }
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(15, 23, 42, 0.55),
+            rgba(15, 23, 42, 0.45),
+            rgba(15, 23, 42, 0.25)
+        ),
+        url("https://imgs.search.brave.com/GXEm33fB8VR_WsMTVeGbOSQieH1Sx8kGV3torFz4tRM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZW1pbmkubWVk/aWEvaW1nL2xhcmdl/LzIwMjYvOC8zMC8y/MDI2XzhfMzBfMTNf/NDhfMTNfMjk0LndlYnA");
 
-            .tournaments-header::after {
-                content: "";
-                position: absolute;
-                width: 300px;
-                height: 300px;
-                bottom: -200px;
-                right: -100px;
-                border-radius: 50%;
-                background: rgba(56,189,248,.05);
-            }
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
-            .tournaments-header-content {
-                position: relative;
-                z-index: 2;
-            }
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 14px 35px rgba(15,23,42,.18);
+}
 
+.tournaments-header::before {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    top: -170px;
+    left: -80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.035);
+}
+
+.tournaments-header::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    bottom: -200px;
+    right: -100px;
+    border-radius: 50%;
+    background: rgba(56,189,248,.05);
+}
+
+.tournaments-header-content {
+    position: relative;
+    z-index: 2;
+}
             .tournaments-header-icon {
                 width: 62px;
                 height: 62px;

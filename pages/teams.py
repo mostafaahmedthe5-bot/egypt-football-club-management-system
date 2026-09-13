@@ -1,1857 +1,527 @@
-from nicegui import ui, app
 import database as db
+from nicegui import app, ui
+
+GRASS_BACKGROUND = 'https://imgs.search.brave.com/sJbzVVnKH_yP_2G9TeAfuOc7BqdkM9hIYavynKjmqHk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlemku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMDgvNDU5Lzc3Ni9zbWFsbC9ncmVlbi1uYXR1/cmFsLW9yZ2FuaWMt/Z3Jhc3MtYmFja2dy/b3VuZC1hbmQtdGV4/dHVyZS12ZWN0b3IuanBn'
+
+
+def get_club_logo_url(club_name):
+    logos = {
+        'الأهلي': 'https://assets.footylogos.com/logos/al-ahly-sc/al-ahly-sc-logo-footylogos.png',
+        'الزمالك': 'https://assets.footylogos.com/logos/zamalek-sc/zamalek-sc-logo-footylogos.png',
+        'بيراميدز': 'https://assets.footylogos.com/logos/pyramids-fc/pyramids-fc-logo-footylogos.png',
+        'المصري': 'https://assets.footylogos.com/logos/al-masry-sc/al-masry-sc-logo-footylogos.png',
+        'الإسماعيلي': 'https://assets.footylogos.com/logos/ismaily-sc/ismaily-sc-logo-footylogos.png',
+        'الاتحاد السكندري': 'https://assets.footylogos.com/logos/ittihad-alexandria/ittihad-alexandria-logo-footylogos.png',
+        'سموحة': 'https://assets.footylogos.com/logos/smouha/smouha-logo-footylogos.png',
+        'إنبي': 'https://assets.footylogos.com/logos/enppi-sc/enppi-sc-logo-footylogos.png',
+        'البنك الأهلي': 'https://assets.footylogos.com/logos/bank-el-ahly/bank-el-ahly-logo-footylogos.png',
+        'سيراميكا كليوباترا': 'https://assets.footylogos.com/logos/ceramica-cleopatra-fc/ceramica-cleopatra-logo-footylogos.png',
+        'الجونة': 'https://assets.footylogos.com/logos/el-gouna-fc/el-gouna-logo-footylogos.png',
+        'طلائع الجيش': 'https://assets.footylogos.com/logos/talaea-el-geish/talaea-el-geish-logo-footylogos.png',
+        'مودرن سبورت': 'https://assets.footylogos.com/logos/modern-sport/modern-sport-logo-footylogos.png',
+        'زد': 'https://assets.footylogos.com/logos/zed-fc/zed-fc-logo-footylogos.png',
+        'المقاولون العرب': 'https://assets.footylogos.com/logos/el-mokawloon/el-mokawloon-logo-footylogos.png',
+        'وادي دجلة': 'https://assets.footylogos.com/logos/wadi-degla-sc/wadi-degla-logo-footylogos.png',
+        'غزل المحلة': 'https://assets.footylogos.com/logos/ghazl-el-mahalla/ghazl-el-mahalla-logo-footylogos.png',
+        'فاركو': 'https://assets.footylogos.com/logos/pharco-fc/pharco-fc-logo-footylogos.png',
+        'حرس الحدود': 'https://assets.footylogos.com/logos/harras-hodoud/harras-hodoud-logo-footylogos.png',
+        'بتروجيت': 'https://assets.footylogos.com/logos/petrojet-fc/petrojet-fc-logo-footylogos.png',
+        'كهرباء الإسماعيلية': None,
+    }
+    return logos.get(club_name)
+
+
+def get_club_team_photo_url(club_name):
+    team_photos = {
+        'الأهلي': 'https://mediaaws-live.almasryalyoum.com/almasryalyoum/uploads/images/2026/02/28/thumbs/600x600/1652556.jpg',
+        'الزمالك': 'https://img.btolat.com/2026/8/26/news/408598/large.jpg',
+        'بيراميدز': 'https://assets.kooora.com/images/v3/getty-2241502137/crop/MM5DINJWHA5DENJXGA5G433XMU5DAORVGQZQ%3D%3D%3D%3D/GettyImages-2241502137.jpg?upscale=true&width=1400',
+        'المصري': 'https://cdn.footballkitarchive.com/2025/08/16/SJ9EsdhLqv00LYu.jpg',
+        'الإسماعيلي': 'https://gate.ahram.org.eg/Media/News/2026/2/22/19_2026-639073872925408457-540.jpg',
+        'الاتحاد السكندري': 'https://media.egypttelegraph.com/2024/5/large/2816857328732202405140838433843.jpg',
+        'سموحة': 'https://gate.ahram.org.eg/Media/News/2021/3/12/19_2021-637511660578110818-811.jpg',
+        'إنبي': None,
+        'البنك الأهلي': 'https://sportcdn.elwatannews.com/sport/537x389/6296324251755267957.jpg',
+        'سيراميكا كليوباترا': None,
+        'الجونة': 'https://assets.kooora.com/images/v3/kooora_816777_1/koo_110409.jpg?auto=webp&format=pjpg&quality=60&width=1320',
+        'طلائع الجيش': 'https://img.btolat.com/2022/8/17/news/292086/large.jpg',
+        'مودرن سبورت': 'https://gate.ahram.org.eg/Media/News/2025/8/9/19_2025-638903754105204016-520.jpeg',
+        'زد': 'https://cdn.korabia.net/images/1200x667/2023/%D9%81%D8%B1%D9%8A%D9%82-%D8%B2%D8%AF1701348086.webp',
+        'المقاولون العرب': 'https://aws-br-images.s3.us-east-2.amazonaws.com/upload/iblock/0bb/0bb3375257da9d00dc55d9d48a74843d.jpg',
+        'وادي دجلة': 'https://koraplus.com/images/2025/8/large/1644140042104202508160520342034.jpg',
+        'غزل المحلة': 'https://mediaaws-live.almasryalyoum.com/AMAYLivePictures/portalimages/news/original/2025/08/10/2742503_0.jpg',
+        'فاركو': 'https://media.egypttelegraph.com/2024/7/large/28243251869320240708090941941.jpg',
+        'حرس الحدود': 'https://media.elbalad.news/2024/10/large/838/5/181.jpg',
+        'بتروجيت': 'https://cdn.dailysports.net/dailysports/20260223/82dcfee5426da77f59ff6044a60b5b0cb80409300cd5fe08dfc95f890c5b098f-1200-675.webp',
+        'كهرباء الإسماعيلية': 'https://img.btolat.com/2026/5/4/news/399815/large.jpg',
+    }
+    return team_photos.get(club_name)
 
 
 def content(club_id=None):
-    # =========================================================
-    # النادي الحالي
-    # =========================================================
-
     if club_id is None:
         club_id = app.storage.user.get('club_id')
-
     if not club_id:
         ui.navigate.to('/select_club')
         return
 
-    # =========================================================
-    # التحقق من النادي
-    # =========================================================
-
     club = db.fetch_one(
         """
-        SELECT
-            Id,
-            ClubNameAR,
-            ClubNameEN
-        FROM Club
+        SELECT Id, ClubNameAR, ClubNameEN 
+        FROM Club 
         WHERE Id = ?
         """,
-        (club_id,)
+        (club_id,),
     )
 
     if not club:
-        ui.notify(
-            'النادي غير موجود',
-            color='negative'
-        )
+        ui.notify('النادي غير موجود', color='negative')
         ui.navigate.to('/select_club')
         return
 
     club_name_ar = club['ClubNameAR'] or 'النادي'
     club_name_en = club['ClubNameEN'] or ''
 
-    # =========================================================
-    # البيانات المساعدة
-    # =========================================================
+    club_logo_url = get_club_logo_url(club_name_ar)
+    team_photo_url = get_club_team_photo_url(club_name_ar)
 
     categories = db.fetch_all(
         """
-        SELECT
-            Id,
-            TeamCategoryNameAR,
-            TeamCategoryNameEN
-        FROM TeamCategory
+        SELECT Id, TeamCategoryNameAR, TeamCategoryNameEN 
+        FROM TeamCategory 
         ORDER BY Id
         """
     )
 
     sports = db.fetch_all(
         """
-        SELECT
-            Id,
-            SportNameAR,
-            SportNameEN
-        FROM Sport
+        SELECT Id, SportNameAR, SportNameEN 
+        FROM Sport 
         ORDER BY Id
         """
     )
 
     category_options = {
-        row['Id']: (
-            row['TeamCategoryNameAR']
-            or row['TeamCategoryNameEN']
-            or str(row['Id'])
-        )
+        row['Id']: row['TeamCategoryNameAR']
+        or row['TeamCategoryNameEN']
+        or str(row['Id'])
         for row in categories
     }
 
     sport_options = {
-        row['Id']: (
-            row['SportNameAR']
-            or row['SportNameEN']
-            or str(row['Id'])
-        )
+        row['Id']: row['SportNameAR']
+        or row['SportNameEN']
+        or str(row['Id'])
         for row in sports
     }
 
-    # =========================================================
-    # CSS
-    # =========================================================
-
-    ui.add_head_html(
-        '''
+    ui.add_head_html(f"""
         <style>
-
-            /* =================================================
-               GLOBAL
-               ================================================= */
-
-            .teams-page {
+            .teams-page {{
                 direction: rtl;
-
                 min-height: 100vh;
                 width: 100%;
-
-                background:
-                    linear-gradient(
-                        180deg,
-                        #f8fafc 0%,
-                        #f1f5f9 100%
-                    );
-            }
-
-            .teams-wrapper {
+                background: linear-gradient(180deg, #f0fdf4 0%, #f8fafc 38%, #eef2f7 100%);
+            }}
+            .teams-wrapper {{
                 width: 100%;
                 max-width: 1500px;
                 margin: 0 auto;
-            }
-
-            /* =================================================
-               HEADER
-               ================================================= */
-
-            .teams-header {
+            }}
+            .football-hero {{
+                position: relative;
                 width: 100%;
-
-                position: relative;
+                min-height: 310px;
                 overflow: hidden;
-
-                border-radius: 24px;
-
-                padding: 28px 30px;
-
-                background:#7A9E7E;
-                   
-
-                border:
-                    1px solid
-                    rgba(255,255,255,.08);
-
-                box-shadow:
-                    0 14px 35px
-                    rgba(15,23,42,.13);
-            }
-
-            .teams-header::before {
-                content: "";
-
+                border-radius: 28px;
+                background: #052e16;
+                box-shadow: 0 20px 50px rgba(15,23,42,.18);
+                isolation: isolate;
+            }}
+            .football-hero-bg {{
                 position: absolute;
-
-                width: 280px;
-                height: 280px;
-
-                top: -170px;
-                left: -80px;
-
-                border-radius: 50%;
-
-                background:
-                    rgba(255,255,255,.035);
-            }
-
-            .teams-header::after {
-                content: "";
-
+                inset: 0;
+                z-index: -3;
+                background-size: cover;
+                background-position: center;
+                transform: scale(1.02);
+            }}
+            .football-hero-overlay {{
                 position: absolute;
-
-                width: 280px;
-                height: 280px;
-
-                bottom: -180px;
-                right: -90px;
-
-                border-radius: 50%;
-
-                background:
-                    rgba(56,189,248,.05);
-            }
-
-            .teams-header-content {
+                inset: 0;
+                z-index: -2;
+                background: linear-gradient(90deg, rgba(2,6,23,.94) 0%, rgba(2,6,23,.78) 40%, rgba(2,6,23,.45) 72%, rgba(2,6,23,.70) 100%);
+            }}
+            .football-hero-content {{
                 position: relative;
+                min-height: 310px;
+                padding: 32px;
                 z-index: 2;
-            }
-
-            .teams-header-icon {
-                width: 62px;
-                height: 62px;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                border-radius: 17px;
-
-                background:
-                    rgba(255,255,255,.08);
-
-                border:
-                    1px solid
-                    rgba(255,255,255,.12);
-            }
-
-            .teams-header-title {
+            }}
+            .hero-club-logo {{
+                width: 90px;
+                height: 90px;
+                object-fit: contain;
+                padding: 10px;
+                border-radius: 23px;
+                background: rgba(255,255,255,.95);
+                box-shadow: 0 15px 35px rgba(0,0,0,.25);
+            }}
+            .hero-title {{
                 color: white;
-
-                font-size: 29px;
-
-                font-weight: 900;
-
-                line-height: 1.3;
-            }
-
-            .teams-header-club {
-                color: #67e8f9;
-
-                font-size: 19px;
-
-                font-weight: 800;
-            }
-
-            .teams-header-en {
-                color: #94a3b8;
-
-                font-size: 10px;
-
-                font-weight: 700;
-
-                letter-spacing: 2px;
-            }
-
-            .teams-header-description {
-                color: #cbd5e1;
-
-                font-size: 13px;
-
-                line-height: 1.8;
-            }
-
-            .teams-header-badge {
-                display: inline-flex;
-
-                align-items: center;
-
-                gap: 8px;
-
-                padding:
-                    8px 14px;
-
-                border-radius: 999px;
-
-                background:
-                    rgba(59,130,246,.10);
-
-                border:
-                    1px solid
-                    rgba(96,165,250,.18);
-
-                color: #dbeafe;
-
-                font-size: 11px;
-
-                font-weight: 800;
-            }
-
-            .teams-header-dot {
-                width: 7px;
-                height: 7px;
-
-                border-radius: 50%;
-
-                background: #60a5fa;
-            }
-
-            /* =================================================
-               MAIN CARDS
-               ================================================= */
-
-            .main-card {
+                font-size: 32px;
+                font-weight: 950;
+                line-height: 1.2;
+            }}
+            .main-card {{
                 width: 100%;
-
-                background: white;
-
-                border:
-                    1px solid #e2e8f0;
-
-                border-radius: 21px;
-
-                box-shadow:
-                    0 7px 22px
-                    rgba(15,23,42,.045);
-            }
-
-            /* =================================================
-               CARD HEADER
-               ================================================= */
-
-            .card-heading-icon {
-                width: 44px;
-                height: 44px;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                border-radius: 13px;
-            }
-
-            .card-title {
-                color: #0f172a;
-
-                font-size: 18px;
-
-                font-weight: 900;
-            }
-
-            .card-subtitle {
-                color: #94a3b8;
-
-                font-size: 11px;
-
-                font-weight: 600;
-            }
-
-            /* =================================================
-               FIELD
-               ================================================= */
-
-            .field-label {
-                color: #475569;
-
-                font-size: 11px;
-
-                font-weight: 850;
-            }
-
-            .team-field .q-field__control {
-                min-height: 50px !important;
-
-                border-radius: 13px !important;
-            }
-
-            .team-field input {
-                font-size: 13px !important;
-
-                font-weight: 650 !important;
-            }
-
-            /* =================================================
-               SAVE BUTTON
-               ================================================= */
-
-            .save-team-button {
-                min-height: 50px !important;
-
-                border-radius: 13px !important;
-
-                background:
-                    #1d4ed8 !important;
-
-                color: white !important;
-
-                font-weight: 850 !important;
-
-                padding:
-                    0 24px !important;
-            }
-
-            /* =================================================
-               LIST HEADER
-               ================================================= */
-
-            .teams-list-card {
-                width: 100%;
-
-                background: white;
-
-                border:
-                    1px solid #e2e8f0;
-
-                border-radius: 21px;
-
-                overflow: hidden;
-
-                box-shadow:
-                    0 7px 22px
-                    rgba(15,23,42,.045);
-            }
-
-            .teams-list-header {
-                background: #f8fafc;
-
-                border-bottom:
-                    1px solid #e2e8f0;
-            }
-
-            .teams-count {
-                min-width: 75px;
-
-                text-align: center;
-
-                background:
-                    #eff6ff;
-
-                color:
-                    #1d4ed8;
-
-                border:
-                    1px solid #dbeafe;
-
-                padding:
-                    6px 11px;
-
-                border-radius:
-                    999px;
-
-                font-size: 11px;
-
-                font-weight: 850;
-            }
-
-            /* =================================================
-               TEAM ROW
-               ================================================= */
-
-            .team-row {
-                width: 100%;
-
-                min-height: 82px;
-
-                background: white;
-
-                border-bottom:
-                    1px solid #f1f5f9;
-
-                padding:
-                    14px 18px;
-            }
-
-            .team-row:last-child {
-                border-bottom: none;
-            }
-
-            .team-avatar {
-                width: 50px;
-                height: 50px;
-
-                flex-shrink: 0;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                border-radius: 15px;
-
-                background:
-                    linear-gradient(
-                        135deg,
-                        #0f172a,
-                        #1e3a8a
-                    );
-
-                color: white;
-            }
-
-            .team-name {
-                color: #0f172a;
-
-                font-size: 14px;
-
-                font-weight: 900;
-            }
-
-            .team-name-en {
-                color: #94a3b8;
-
-                font-size: 10px;
-
-                font-weight: 600;
-            }
-
-            .team-meta {
-                display: inline-flex;
-
-                align-items: center;
-
-                gap: 6px;
-
-                background:
-                    #f8fafc;
-
-                border:
-                    1px solid #e2e8f0;
-
-                color:
-                    #475569;
-
-                padding:
-                    6px 10px;
-
-                border-radius:
-                    9px;
-
-                font-size: 10px;
-
-                font-weight: 750;
-            }
-
-            .team-meta.sport {
-                background:
-                    #eff6ff;
-
-                border-color:
-                    #dbeafe;
-
-                color:
-                    #1d4ed8;
-            }
-
-            .team-meta.category {
-                background:
-                    #f0fdf4;
-
-                border-color:
-                    #dcfce7;
-
-                color:
-                    #15803d;
-            }
-
-            .team-id {
-                color: #94a3b8;
-
-                font-size: 9px;
-
-                font-weight: 650;
-            }
-
-            .team-action {
-                width: 38px !important;
-                height: 38px !important;
-
-                border-radius: 10px !important;
-
-                color: #475569 !important;
-            }
-
-            .team-delete-action {
-                color: #dc2626 !important;
-            }
-
-            /* =================================================
-               EMPTY STATE
-               ================================================= */
-
-            .empty-state {
-                min-height: 330px;
-            }
-
-            .empty-icon-box {
-                width: 82px;
-                height: 82px;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
+                background: linear-gradient(rgba(255,255,255,.94), rgba(255,255,255,.94)), url("{GRASS_BACKGROUND}");
+                background-size: cover;
+                background-position: center;
+                border: 1px solid #d1fae5;
                 border-radius: 22px;
-
-                background:
-                    #f8fafc;
-
-                border:
-                    1px solid #e2e8f0;
-            }
-
-            /* =================================================
-               DIALOG
-               ================================================= */
-
-            .dialog-card {
-                width: 500px;
-
-                max-width: 95vw;
-
-                border-radius: 22px;
-
-                overflow: hidden;
-
-                background: white;
-
-                box-shadow:
-                    0 20px 60px
-                    rgba(15,23,42,.18);
-            }
-
-            .dialog-header {
-                padding:
-                    22px 24px;
-
-                background:
-                    linear-gradient(
-                        135deg,
-                        #0f172a,
-                        #172554
-                    );
-            }
-
-            .dialog-header-icon {
-                width: 48px;
-                height: 48px;
-
+                box-shadow: 0 10px 30px rgba(15,23,42,.07);
+            }}
+            .card-heading-icon {{
+                width: 46px;
+                height: 46px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-
                 border-radius: 14px;
-
-                background:
-                    rgba(255,255,255,.08);
-
-                border:
-                    1px solid
-                    rgba(255,255,255,.10);
-            }
-
-            .dialog-title {
+                background: linear-gradient(145deg,#052e16,#16a34a);
                 color: white;
-
-                font-size: 19px;
-
-                font-weight: 900;
-            }
-
-            .dialog-subtitle {
-                color: #94a3b8;
-
-                font-size: 10px;
-
-                font-weight: 600;
-            }
-
-            .dialog-body {
-                padding:
-                    24px;
-            }
-
-            .dialog-save {
-                background:
-                    #1d4ed8 !important;
-
-                color: white !important;
-
-                border-radius:
-                    11px !important;
-
-                font-weight:
-                    850 !important;
-            }
-
-            /* =================================================
-               DELETE DIALOG
-               ================================================= */
-
-            .delete-dialog {
-                width: 420px;
-
-                max-width: 95vw;
-
-                border-radius: 21px;
-
-                padding: 26px;
-            }
-
-            .delete-icon-box {
-                width: 70px;
-                height: 70px;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                margin: 0 auto;
-
+                box-shadow: 0 8px 18px rgba(22,101,52,.18);
+            }}
+            .teams-list-card {{
+                width: 100%;
+                background: linear-gradient(rgba(255,255,255,.91), rgba(255,255,255,.91)), url("{GRASS_BACKGROUND}");
+                background-size: cover;
+                background-position: center;
+                border: 1px solid #bbf7d0;
+                border-radius: 24px;
+                overflow: hidden;
+            }}
+            .teams-list-header {{
+                background: linear-gradient(90deg, rgba(5,46,22,.96), rgba(21,128,61,.92));
+                color: white;
+            }}
+            .teams-grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 16px;
+                padding: 20px;
+            }}
+            .team-card {{
+                position: relative;
+                min-height: 190px;
                 border-radius: 20px;
-
-                background:
-                    #fef2f2;
-
-                border:
-                    1px solid #fecaca;
-            }
-
-            .delete-title {
-                color: #0f172a;
-
-                font-size: 21px;
-
-                font-weight: 900;
-            }
-
-            .delete-team-name {
-                color: #1d4ed8;
-
-                font-size: 15px;
-
-                font-weight: 850;
-            }
-
-            .delete-warning {
-                color: #64748b;
-
-                font-size: 12px;
-
-                line-height: 1.8;
-
-                background:
-                    #f8fafc;
-
-                border:
-                    1px solid #e2e8f0;
-
-                border-radius: 13px;
-
-                padding:
-                    12px;
-            }
-
-            .delete-button {
-                background:
-                    #dc2626 !important;
-
-                color: white !important;
-
-                border-radius:
-                    11px !important;
-
-                font-weight:
-                    850 !important;
-            }
-
-            /* =================================================
-               SCROLLBAR
-               ================================================= */
-
-            ::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
-                border-radius: 999px;
-            }
-
-            /* =================================================
-               RESPONSIVE
-               ================================================= */
-
-            @media (max-width: 900px) {
-
-                .teams-header {
-                    padding: 24px;
-                }
-
-                .teams-header-title {
-                    font-size: 25px;
-                }
-
-                .teams-header-club {
-                    font-size: 17px;
-                }
-            }
-
-            @media (max-width: 700px) {
-
-                .team-row {
-                    padding:
-                        13px 12px;
-                }
-
-                .team-meta {
-                    font-size: 9px;
-                    padding:
-                        5px 8px;
-                }
-
-                .team-avatar {
-                    width: 44px;
-                    height: 44px;
-                }
-            }
-
-            @media (max-width: 600px) {
-
-                .teams-page {
-                    padding: 12px !important;
-                }
-
-                .teams-header {
-                    padding: 20px;
-                    border-radius: 18px;
-                }
-
-                .teams-header-title {
-                    font-size: 22px;
-                }
-
-                .teams-header-description {
-                    font-size: 11px;
-                }
-
-                .teams-list-card,
-                .main-card {
-                    border-radius: 17px;
-                }
-
-                .team-row {
-                    min-height: 76px;
-                }
-            }
-
+                border: 1px solid rgba(187,247,208,.9);
+                background: linear-gradient(rgba(2,44,20,.74), rgba(20,83,45,.84)), url("{GRASS_BACKGROUND}");
+                background-size: cover;
+                padding: 18px;
+            }}
+            .team-name {{ color: white; font-size: 16px; font-weight: 900; }}
+            .team-meta {{
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 700;
+            }}
+            .team-meta.category {{ color: #dcfce7; background: rgba(22,101,52,.60); }}
+            .team-meta.sport {{ color: #dbeafe; background: rgba(30,64,175,.52); }}
+            .team-actions {{ position: absolute; left: 14px; top: 14px; display: flex; gap: 5px; }}
         </style>
-        '''
-    )
+    """)
 
-    # =========================================================
-    # الصفحة
-    # =========================================================
+    with ui.element('div').classes('teams-page p-4 md:p-8'):
+        with ui.element('div').classes('teams-wrapper space-y-6'):
 
-    with ui.column().classes(
-        'teams-page w-full p-4 md:p-6 lg:p-8'
-    ):
-
-        with ui.column().classes(
-            'teams-wrapper gap-6'
-        ):
-
-            # =================================================
-            # HEADER
-            # =================================================
-
-            with ui.element(
-                'div'
-            ).classes(
-                'teams-header'
-            ):
-
+            # Hero Section
+            with ui.element('div').classes('football-hero'):
+                if team_photo_url:
+                    ui.element('div').classes('football-hero-bg').style(
+                        f'background-image: url("{team_photo_url}")'
+                    )
+                ui.element('div').classes('football-hero-overlay')
                 with ui.row().classes(
-                    'teams-header-content w-full items-center justify-between flex-wrap gap-6'
+                    'football-hero-content items-center justify-between gap-6'
                 ):
-
-                    with ui.row().classes(
-                        'items-center gap-4'
-                    ):
-
-                        with ui.element(
-                            'div'
-                        ).classes(
-                            'teams-header-icon'
-                        ):
-
-                            ui.icon(
-                                'groups'
-                            ).classes(
-                                'text-3xl text-white'
+                    with ui.row().classes('items-center gap-4'):
+                        if club_logo_url:
+                            ui.image(club_logo_url).classes('hero-club-logo')
+                        with ui.column().classes('gap-1'):
+                            ui.label(club_name_ar).classes('hero-title')
+                            ui.label(club_name_en).classes(
+                                'text-slate-300 text-sm'
                             )
 
-                        with ui.column().classes(
-                            'gap-1'
-                        ):
-
-                            ui.label(
-                                'إدارة فرق النادي'
-                            ).classes(
-                                'teams-header-title'
-                            )
-
-                            ui.label(
-                                club_name_ar
-                            ).classes(
-                                'teams-header-club'
-                            )
-
-                           
-
-                            
-                        
-
-                    with ui.element(
-                        'div'
-                    ).classes(
-                        'teams-header-badge'
-                    ):
-
-                        ui.element(
-                            'span'
-                        ).classes(
-                            'teams-header-dot'
-                        )
-
-                        ui.label(
-                            'Team Management'
-                        )
-
-            # =================================================
-            # ADD TEAM
-            # =================================================
-
-            with ui.card().classes(
-                'main-card p-5 md:p-6'
-            ):
-
-                with ui.row().classes(
-                    'items-center gap-3 mb-6'
-                ):
-
-                    with ui.element(
-                        'div'
-                    ).classes(
-                        'card-heading-icon bg-blue-50 text-blue-600'
-                    ):
-
-                        ui.icon(
-                            'add_circle'
-                        ).classes(
-                            'text-xl'
-                        )
-
-                    with ui.column().classes(
-                        'gap-0'
-                    ):
-
-                        ui.label(
-                            'إضافة فريق جديد'
-                        ).classes(
-                            'card-title'
-                        )
-
-                        ui.label(
-                            'أدخل بيانات الفريق وحدد الرياضة والفئة'
-                        ).classes(
-                            'card-subtitle mt-1'
-                        )
-
-                with ui.row().classes(
-                    'w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'
-                ):
-
-                    # =========================================
-                    # Team Arabic
-                    # =========================================
-
-                    with ui.column().classes(
-                        'w-full gap-2'
-                    ):
-
-                        ui.label(
-                            'اسم الفريق بالعربي'
-                        ).classes(
-                            'field-label'
-                        )
-
-                        team_ar = ui.input(
-                            placeholder='مثال: الفريق الأول'
-                        ).props(
-                            'outlined rounded'
-                        ).classes(
-                            'team-field w-full'
-                        )
-
-                    # =========================================
-                    # Team English
-                    # =========================================
-
-                    with ui.column().classes(
-                        'w-full gap-2'
-                    ):
-
-                        ui.label(
-                            'اسم الفريق بالإنجليزي'
-                        ).classes(
-                            'field-label'
-                        )
-
-                        team_en = ui.input(
-                            placeholder='Example: First Team'
-                        ).props(
-                            'outlined rounded'
-                        ).classes(
-                            'team-field w-full'
-                        )
-
-                    # =========================================
-                    # Category
-                    # =========================================
-
-                    with ui.column().classes(
-                        'w-full gap-2'
-                    ):
-
-                        ui.label(
-                            'فئة الفريق'
-                        ).classes(
-                            'field-label'
-                        )
-
-                        team_category = ui.select(
-                            category_options,
-                            label='اختر فئة الفريق'
-                        ).props(
-                            'outlined rounded clearable'
-                        ).classes(
-                            'team-field w-full'
-                        )
-
-                    # =========================================
-                    # Sport
-                    # =========================================
-
-                    with ui.column().classes(
-                        'w-full gap-2'
-                    ):
-
-                        ui.label(
-                            'الرياضة'
-                        ).classes(
-                            'field-label'
-                        )
-
-                        sport = ui.select(
-                            sport_options,
-                            label='اختر الرياضة'
-                        ).props(
-                            'outlined rounded clearable'
-                        ).classes(
-                            'team-field w-full'
-                        )
-
-                with ui.row().classes(
-                    'w-full justify-end mt-6'
-                ):
-
-                    save_button = ui.button(
-                        'حفظ الفريق',
-                        icon='save'
-                    ).props(
-                        'unelevated no-caps'
-                    ).classes(
-                        'save-team-button'
+            # Add Team Form
+            with ui.element('div').classes('main-card p-6'):
+                with ui.row().classes('items-center gap-3 mb-4'):
+                    with ui.element('div').classes('card-heading-icon'):
+                        ui.icon('add').classes('text-xl')
+                    ui.label('إضافة فريق جديد').classes(
+                        'text-lg font-bold text-slate-800'
                     )
 
-            # =================================================
-            # TEAMS CONTAINER
-            # =================================================
+                with ui.row().classes('w-full gap-4 items-center flex-wrap'):
+                    team_ar = (
+                        ui.input(label='اسم الفريق (عربي)')
+                        .classes('flex-1 min-w-[200px]')
+                        .props('outlined dense')
+                    )
+                    team_en = (
+                        ui.input(label='اسم الفريق (إنجليزي)')
+                        .classes('flex-1 min-w-[200px]')
+                        .props('outlined dense')
+                    )
+                    team_category = (
+                        ui.select(
+                            options=category_options, label='الفئة العمرية'
+                        )
+                        .classes('flex-1 min-w-[180px]')
+                        .props('outlined dense')
+                    )
+                    sport = (
+                        ui.select(options=sport_options, label='الرياضة')
+                        .classes('flex-1 min-w-[180px]')
+                        .props('outlined dense')
+                    )
 
-            teams_container = ui.column().classes(
-                'w-full'
-            )
+                    def save_new_team():
+                        if not team_ar.value:
+                            ui.notify(
+                                'يرجى إدخال اسم الفريق بالعربية',
+                                color='warning',
+                            )
+                            return
+                        db.execute(
+                            """
+                            INSERT INTO Team (TeamAR, TeamEN, Teamcatgoryid, Sportid, Clubid)
+                            VALUES (?, ?, ?, ?, ?)
+                            """,
+                            (
+                                team_ar.value,
+                                team_en.value,
+                                team_category.value,
+                                sport.value,
+                                club_id,
+                            ),
+                        )
+                        ui.notify('تمت إضافة الفريق بنجاح', color='positive')
+                        team_ar.value = ''
+                        team_en.value = ''
+                        team_category.value = None
+                        sport.value = None
+                        refresh_teams()
 
-            # =================================================
-            # EDIT DIALOG
-            # =================================================
+                    ui.button(
+                        'حفظ الفريق', icon='save', on_click=save_new_team
+                    ).classes('bg-green-700 text-white px-6 py-2 rounded-lg')
 
+            # Container for teams list
+            teams_container = ui.element('div').classes('w-full')
+
+            # Dialogs
             edit_dialog = ui.dialog()
-
-            with edit_dialog:
-
-                with ui.card().classes(
-                    'dialog-card'
-                ):
-
-                    # =========================================
-                    # Header
-                    # =========================================
-
-                    with ui.element(
-                        'div'
-                    ).classes(
-                        'dialog-header'
-                    ):
-
-                        with ui.row().classes(
-                            'items-center gap-3'
-                        ):
-
-                            with ui.element(
-                                'div'
-                            ).classes(
-                                'dialog-header-icon'
-                            ):
-
-                                ui.icon(
-                                    'edit'
-                                ).classes(
-                                    'text-xl text-white'
-                                )
-
-                            with ui.column().classes(
-                                'gap-0'
-                            ):
-
-                                ui.label(
-                                    'تعديل الفريق'
-                                ).classes(
-                                    'dialog-title'
-                                )
-
-                                ui.label(
-                                    'تعديل بيانات الفريق الحالية'
-                                ).classes(
-                                    'dialog-subtitle mt-1'
-                                )
-
-                    # =========================================
-                    # Body
-                    # =========================================
-
-                    with ui.column().classes(
-                        'dialog-body'
-                    ):
-
-                        edit_id = ui.number(
-                            'رقم الفريق'
-                        ).props(
-                            'outlined rounded readonly'
-                        ).classes(
-                            'w-full mb-3'
-                        )
-
-                        edit_team_ar = ui.input(
-                            'اسم الفريق بالعربي'
-                        ).props(
-                            'outlined rounded'
-                        ).classes(
-                            'w-full mb-3'
-                        )
-
-                        edit_team_en = ui.input(
-                            'اسم الفريق بالإنجليزي'
-                        ).props(
-                            'outlined rounded'
-                        ).classes(
-                            'w-full mb-3'
-                        )
-
-                        edit_category = ui.select(
-                            category_options,
-                            label='فئة الفريق'
-                        ).props(
-                            'outlined rounded clearable'
-                        ).classes(
-                            'w-full mb-3'
-                        )
-
-                        edit_sport = ui.select(
-                            sport_options,
-                            label='الرياضة'
-                        ).props(
-                            'outlined rounded clearable'
-                        ).classes(
-                            'w-full mb-6'
-                        )
-
-                        with ui.row().classes(
-                            'w-full justify-end gap-2'
-                        ):
-
-                            ui.button(
-                                'إلغاء',
-                                on_click=edit_dialog.close
-                            ).props(
-                                'flat no-caps'
-                            )
-
-                            update_button = ui.button(
-                                'حفظ التعديل',
-                                icon='save'
-                            ).props(
-                                'unelevated no-caps'
-                            ).classes(
-                                'dialog-save'
-                            )
-
-            # =================================================
-            # DELETE DIALOG
-            # =================================================
-
             delete_dialog = ui.dialog()
 
-            with delete_dialog:
+            edit_id = {'value': None}
+            delete_target_id = {'value': None}
 
-                with ui.card().classes(
-                    'delete-dialog'
-                ):
+            # State fields for edit
+            edit_team_ar = None
+            edit_team_en = None
+            edit_category = None
+            edit_sport = None
 
-                    with ui.element(
-                        'div'
-                    ).classes(
-                        'delete-icon-box'
-                    ):
+            # Setup Edit Dialog Content
+            with edit_dialog, ui.card().classes('w-[500px] max-w-full p-6'):
+                ui.label('تعديلبيانات الفريق').classes(
+                    'text-xl font-bold mb-4'
+                )
+                edit_team_ar_input = ui.input(label='اسم الفريق (عربي)').props(
+                    'outlined dense'
+                )
+                edit_team_en_input = ui.input(
+                    label='اسم الفريق (إنجليزي)'
+                ).props('outlined dense')
+                edit_category_select = ui.select(
+                    options=category_options, label='الفئة العمرية'
+                ).props('outlined dense')
+                edit_sport_select = ui.select(
+                    options=sport_options, label='الرياضة'
+                ).props('outlined dense')
 
-                        ui.icon(
-                            'delete_forever'
-                        ).classes(
-                            'text-3xl text-red-600'
-                        )
+                def update_team():
+                    db.execute(
+                        """
+                        UPDATE Team 
+                        SET TeamAR = ?, TeamEN = ?, Teamcatgoryid = ?, Sportid = ?
+                        WHERE Id = ?
+                        """,
+                        (
+                            edit_team_ar_input.value,
+                            edit_team_en_input.value,
+                            edit_category_select.value,
+                            edit_sport_select.value,
+                            edit_id['value'],
+                        ),
+                    )
+                    ui.notify('تم تحديث البيانات بنجاح', color='positive')
+                    edit_dialog.close()
+                    refresh_teams()
 
-                    ui.label(
-                        'حذف الفريق'
-                    ).classes(
-                        'delete-title text-center mt-4'
+                with ui.row().classes('justify-end gap-2 mt-4'):
+                    ui.button(
+                        'إلغاء', on_click=edit_dialog.close
+                    ).props('flat')
+                    ui.button(
+                        'حفظ التعديلات', on_click=update_team
+                    ).classes('bg-green-700 text-white')
+
+            # Setup Delete Dialog Content
+            with delete_dialog, ui.card().classes('w-[400px] max-w-full p-6'):
+                ui.label('تأكيد الحذف').classes(
+                    'text-xl font-bold text-red-600 mb-2'
+                )
+                ui.label(
+                    'هل أنت تأكد من رغبتك في حذف هذا الفريق نهائياً؟'
+                ).classes('text-sm text-slate-600 mb-4')
+
+                def confirm_delete():
+                    db.execute(
+                        'DELETE FROM Team WHERE Id = ?',
+                        (delete_target_id['value'],),
+                    )
+                    ui.notify('تم حذف الفريق', color='negative')
+                    delete_dialog.close()
+                    refresh_teams()
+
+                with ui.row().classes('justify-end gap-2'):
+                    ui.button(
+                        'إلغاء', on_click=delete_dialog.close
+                    ).props('flat')
+                    ui.button('حذف', on_click=confirm_delete).classes(
+                        'bg-red-600 text-white'
                     )
 
-                    delete_team_name = ui.label(
-                        ''
-                    ).classes(
-                        'delete-team-name text-center mt-2'
-                    )
+            def open_edit(team):
+                edit_id['value'] = team['Id']
+                edit_team_ar_input.value = team['TeamAR'] or ''
+                edit_team_en_input.value = team['TeamEN'] or ''
+                edit_category_select.value = team['Teamcatgoryid']
+                edit_sport_select.value = team['Sportid']
+                edit_dialog.open()
 
-                    delete_team_id = ui.number(
-                        'Id'
-                    ).props(
-                        'readonly'
-                    ).classes(
-                        'hidden'
-                    )
+            def open_delete(team_id):
+                delete_target_id['value'] = team_id
+                delete_dialog.open()
 
-                    ui.label(
-                        'هل أنت متأكد من حذف هذا الفريق؟'
-                    ).classes(
-                        'text-center text-slate-700 font-bold mt-4'
-                    )
-
-                    ui.label(
-                        'سيتم حذف سجل الفريق من النادي. تأكد من عدم وجود بيانات مرتبطة تمنع الحذف.'
-                    ).classes(
-                        'delete-warning text-center mt-4'
-                    )
-
-                    with ui.row().classes(
-                        'w-full justify-center gap-3 mt-6'
-                    ):
-
-                        ui.button(
-                            'إلغاء',
-                            on_click=delete_dialog.close
-                        ).props(
-                            'flat no-caps'
-                        )
-
-                        delete_button = ui.button(
-                            'تأكيد الحذف',
-                            icon='delete'
-                        ).props(
-                            'unelevated no-caps'
-                        ).classes(
-                            'delete-button'
-                        )
-
-            # =================================================
-            # REFRESH TABLE
-            # =================================================
-
-            def refresh_teams_table():
-
+            def refresh_teams():
                 teams_container.clear()
-
                 teams = db.fetch_all(
                     """
-                    SELECT
-                        t.Id,
-                        t.TeamAR,
-                        t.TeamEN,
-                        t.Teamcatgoryid,
-                        t.Sportid,
-                        tc.TeamCategoryNameAR,
-                        tc.TeamCategoryNameEN,
-                        s.SportNameAR,
-                        s.SportNameEN
+                    SELECT 
+                        t.Id, t.TeamAR, t.TeamEN, t.Teamcatgoryid, t.Sportid,
+                        tc.TeamCategoryNameAR, tc.TeamCategoryNameEN,
+                        s.SportNameAR, s.SportNameEN
                     FROM Team t
-                    LEFT JOIN TeamCategory tc
-                        ON tc.Id = t.Teamcatgoryid
-                    LEFT JOIN Sport s
-                        ON s.Id = t.Sportid
+                    LEFT JOIN TeamCategory tc ON tc.Id = t.Teamcatgoryid
+                    LEFT JOIN Sport s ON s.Id = t.Sportid
                     WHERE t.Clubid = ?
                     ORDER BY t.Id DESC
                     """,
-                    (club_id,)
+                    (club_id,),
                 )
 
                 with teams_container:
-
-                    with ui.card().classes(
-                        'teams-list-card'
-                    ):
-
-                        # =====================================
-                        # LIST HEADER
-                        # =====================================
-
+                    with ui.element('div').classes('teams-list-card'):
                         with ui.row().classes(
                             'teams-list-header w-full items-center justify-between p-5'
                         ):
-
-                            with ui.row().classes(
-                                'items-center gap-3'
-                            ):
-
-                                with ui.element(
-                                    'div'
-                                ).classes(
-                                    'card-heading-icon bg-emerald-50 text-emerald-600'
-                                ):
-
-                                    ui.icon(
-                                        'groups'
-                                    ).classes(
-                                        'text-xl'
-                                    )
-
-                                with ui.column().classes(
-                                    'gap-0'
-                                ):
-
-                                    ui.label(
-                                        'الفرق المسجلة'
-                                    ).classes(
-                                        'card-title'
-                                    )
-
-                                    ui.label(
-                                        'جميع الفرق التابعة للنادي'
-                                    ).classes(
-                                        'card-subtitle mt-1'
-                                    )
-
-                            ui.label(
-                                f'{len(teams)} فريق'
-                            ).classes(
-                                'teams-count'
+                            with ui.row().classes('items-center gap-3'):
+                                ui.icon('groups').classes('text-2xl')
+                                ui.label('قائمة فرق النادي').classes(
+                                    'text-lg font-bold'
+                                )
+                            ui.label(f'{len(teams)} فريق').classes(
+                                'bg-white/20 px-3 py-1 rounded-full text-xs font-bold'
                             )
-
-                        # =====================================
-                        # EMPTY STATE
-                        # =====================================
 
                         if not teams:
-
                             with ui.column().classes(
-                                'empty-state w-full items-center justify-center'
+                                'p-8 items-center justify-center text-center gap-2'
                             ):
-
-                                with ui.element(
-                                    'div'
-                                ).classes(
-                                    'empty-icon-box'
-                                ):
-
-                                    ui.icon(
-                                        'groups'
-                                    ).classes(
-                                        'text-4xl text-slate-300'
+                                ui.icon('sports_soccer').classes(
+                                    'text-5xl text-slate-400'
+                                )
+                                ui.label(
+                                    'لا توجد فرق مسجلة حتى الآن'
+                                ).classes('text-lg font-bold text-slate-700')
+                        else:
+                            with ui.element('div').classes('teams-grid'):
+                                for team in teams:
+                                    t_name = team['TeamAR'] or 'فريق بدون اسم'
+                                    t_cat = (
+                                        team['TeamCategoryNameAR']
+                                        or team['TeamCategoryNameEN']
+                                        or 'غير محدد'
+                                    )
+                                    t_sport = (
+                                        team['SportNameAR']
+                                        or team['SportNameEN']
+                                        or 'غير محدد'
                                     )
 
-                                ui.label(
-                                    'لا توجد فرق مسجلة'
-                                ).classes(
-                                    'text-slate-600 font-black text-lg mt-4'
-                                )
-
-                                ui.label(
-                                    'يمكنك إضافة أول فريق من النموذج الموجود بالأعلى'
-                                ).classes(
-                                    'text-slate-400 text-sm mt-1'
-                                )
-
-                            return
-
-                        # =====================================
-                        # COLUMN HEADER
-                        # =====================================
-
-                        with ui.row().classes(
-                            'w-full items-center px-5 py-3 bg-white border-b border-slate-100'
-                        ):
-
-                            ui.label(
-                                'بيانات الفريق'
-                            ).classes(
-                                'text-xs font-black text-slate-400 flex-1'
-                            )
-
-                            ui.label(
-                                'الفئة والرياضة'
-                            ).classes(
-                                'text-xs font-black text-slate-400 w-64 text-center'
-                            )
-
-                            ui.label(
-                                'الإجراءات'
-                            ).classes(
-                                'text-xs font-black text-slate-400 w-24 text-center'
-                            )
-
-                        # =====================================
-                        # TEAM ROWS
-                        # =====================================
-
-                        for team in teams:
-
-                            team_id = team['Id']
-
-                            team_name_ar = (
-                                team['TeamAR']
-                                or 'بدون اسم'
-                            )
-
-                            team_name_en = (
-                                team['TeamEN']
-                                or ''
-                            )
-
-                            category_name = (
-                                team['TeamCategoryNameAR']
-                                or team['TeamCategoryNameEN']
-                                or 'غير محدد'
-                            )
-
-                            sport_name = (
-                                team['SportNameAR']
-                                or team['SportNameEN']
-                                or 'غير محدد'
-                            )
-
-                            with ui.row().classes(
-                                'team-row items-center gap-4'
-                            ):
-
-                                # =================================
-                                # Team information
-                                # =================================
-
-                                with ui.row().classes(
-                                    'items-center gap-4 flex-1 min-w-0'
-                                ):
-
-                                    with ui.element(
-                                        'div'
-                                    ).classes(
-                                        'team-avatar'
-                                    ):
-
-                                        ui.icon(
-                                            'sports_soccer'
-                                        ).classes(
-                                            'text-2xl'
-                                        )
-
-                                    with ui.column().classes(
-                                        'gap-0 min-w-0'
-                                    ):
-
-                                        ui.label(
-                                            team_name_ar
-                                        ).classes(
-                                            'team-name'
-                                        )
-
-                                        if team_name_en:
-
-                                            ui.label(
-                                                team_name_en
-                                            ).classes(
-                                                'team-name-en mt-1'
+                                    with ui.element('div').classes('team-card'):
+                                        with ui.element('div').classes(
+                                            'team-actions'
+                                        ):
+                                            ui.button(
+                                                icon='edit',
+                                                on_click=lambda t=team: open_edit(
+                                                    t
+                                                ),
+                                            ).props('flat round dense').classes(
+                                                'text-white'
+                                            )
+                                            ui.button(
+                                                icon='delete',
+                                                on_click=lambda tid=team[
+                                                    'Id'
+                                                ]: open_delete(tid),
+                                            ).props('flat round dense').classes(
+                                                'text-red-300'
                                             )
 
-                                        ui.label(
-                                            f'ID: {team_id}'
-                                        ).classes(
-                                            'team-id mt-1'
-                                        )
-
-                                # =================================
-                                # Category + Sport
-                                # =================================
-
-                                with ui.row().classes(
-                                    'w-64 justify-center items-center gap-2 flex-wrap'
-                                ):
-
-                                    with ui.element(
-                                        'div'
-                                    ).classes(
-                                        'team-meta category'
-                                    ):
-
-                                        ui.icon(
-                                            'category'
-                                        ).classes(
-                                            'text-xs'
-                                        )
-
-                                        ui.label(
-                                            category_name
-                                        )
-
-                                    with ui.element(
-                                        'div'
-                                    ).classes(
-                                        'team-meta sport'
-                                    ):
-
-                                        ui.icon(
-                                            'sports'
-                                        ).classes(
-                                            'text-xs'
-                                        )
-
-                                        ui.label(
-                                            sport_name
-                                        )
-
-                                # =================================
-                                # Actions
-                                # =================================
-
-                                with ui.row().classes(
-                                    'w-24 justify-center items-center gap-1'
-                                ):
-
-                                    def open_edit(
-                                        team_data=team
-                                    ):
-
-                                        edit_id.value = (
-                                            team_data['Id']
-                                        )
-
-                                        edit_team_ar.value = (
-                                            team_data['TeamAR']
-                                            or ''
-                                        )
-
-                                        edit_team_en.value = (
-                                            team_data['TeamEN']
-                                            or ''
-                                        )
-
-                                        edit_category.value = (
-                                            team_data[
-                                                'Teamcatgoryid'
-                                            ]
-                                        )
-
-                                        edit_sport.value = (
-                                            team_data[
-                                                'Sportid'
-                                            ]
-                                        )
-
-                                        edit_dialog.open()
-
-                                    def open_delete(
-                                        team_data=team
-                                    ):
-
-                                        delete_team_id.value = (
-                                            team_data['Id']
-                                        )
-
-                                        delete_team_name.text = (
-                                            team_data['TeamAR']
-                                            or team_data['TeamEN']
-                                            or 'هذا الفريق'
-                                        )
-
-                                        delete_dialog.open()
-
-                                    ui.button(
-                                        icon='edit',
-                                        on_click=open_edit
-                                    ).props(
-                                        'flat round'
-                                    ).classes(
-                                        'team-action'
-                                    ).tooltip(
-                                        'تعديل الفريق'
-                                    )
-
-                                    ui.button(
-                                        icon='delete',
-                                        on_click=open_delete
-                                    ).props(
-                                        'flat round'
-                                    ).classes(
-                                        'team-action team-delete-action'
-                                    ).tooltip(
-                                        'حذف الفريق'
-                                    )
-
-            # =================================================
-            # ADD TEAM
-            # =================================================
-
-            def add_team():
-
-                team_ar_value = (
-                    team_ar.value or ''
-                ).strip()
-
-                team_en_value = (
-                    team_en.value or ''
-                ).strip()
-
-                if not team_ar_value:
-
-                    ui.notify(
-                        'من فضلك أدخل اسم الفريق بالعربي',
-                        color='warning'
-                    )
-
-                    team_ar.run_method(
-                        'focus'
-                    )
-
-                    return
-
-                if not team_category.value:
-
-                    ui.notify(
-                        'من فضلك اختر فئة الفريق',
-                        color='warning'
-                    )
-
-                    return
-
-                if not sport.value:
-
-                    ui.notify(
-                        'من فضلك اختر الرياضة',
-                        color='warning'
-                    )
-
-                    return
-
-                try:
-
-                    db.execute_query(
-                        """
-                        INSERT INTO Team
-                        (
-                            TeamAR,
-                            TeamEN,
-                            Clubid,
-                            Teamcatgoryid,
-                            Sportid
-                        )
-                        VALUES (?, ?, ?, ?, ?)
-                        """,
-                        (
-                            team_ar_value,
-                            team_en_value,
-                            club_id,
-                            team_category.value,
-                            sport.value
-                        )
-                    )
-
-                    ui.notify(
-                        'تمت إضافة الفريق بنجاح',
-                        color='positive'
-                    )
-
-                    team_ar.value = ''
-                    team_en.value = ''
-                    team_category.value = None
-                    sport.value = None
-
-                    refresh_teams_table()
-
-                except Exception as e:
-
-                    ui.notify(
-                        'حدث خطأ أثناء إضافة الفريق',
-                        color='negative'
-                    )
-
-                    print(
-                        f'[ADD TEAM ERROR] {type(e).__name__}: {e}'
-                    )
-
-            save_button.on(
-                'click',
-                add_team
-            )
-
-            # =================================================
-            # UPDATE TEAM
-            # =================================================
-
-            def update_team():
-
-                if not edit_id.value:
-
-                    ui.notify(
-                        'لم يتم تحديد الفريق',
-                        color='warning'
-                    )
-
-                    return
-
-                team_ar_value = (
-                    edit_team_ar.value or ''
-                ).strip()
-
-                team_en_value = (
-                    edit_team_en.value or ''
-                ).strip()
-
-                if not team_ar_value:
-
-                    ui.notify(
-                        'من فضلك أدخل اسم الفريق بالعربي',
-                        color='warning'
-                    )
-
-                    return
-
-                if not edit_category.value:
-
-                    ui.notify(
-                        'من فضلك اختر فئة الفريق',
-                        color='warning'
-                    )
-
-                    return
-
-                if not edit_sport.value:
-
-                    ui.notify(
-                        'من فضلك اختر الرياضة',
-                        color='warning'
-                    )
-
-                    return
-
-                try:
-
-                    db.execute_query(
-                        """
-                        UPDATE Team
-                        SET
-                            TeamAR = ?,
-                            TeamEN = ?,
-                            Teamcatgoryid = ?,
-                            Sportid = ?
-                        WHERE Id = ?
-                        AND Clubid = ?
-                        """,
-                        (
-                            team_ar_value,
-                            team_en_value,
-                            edit_category.value,
-                            edit_sport.value,
-                            int(edit_id.value),
-                            club_id
-                        )
-                    )
-
-                    ui.notify(
-                        'تم تعديل الفريق بنجاح',
-                        color='positive'
-                    )
-
-                    edit_dialog.close()
-
-                    refresh_teams_table()
-
-                except Exception as e:
-
-                    ui.notify(
-                        'حدث خطأ أثناء تعديل الفريق',
-                        color='negative'
-                    )
-
-                    print(
-                        f'[UPDATE TEAM ERROR] {type(e).__name__}: {e}'
-                    )
-
-            update_button.on(
-                'click',
-                update_team
-            )
-
-            # =================================================
-            # DELETE TEAM
-            # =================================================
-
-            def delete_team():
-
-                if not delete_team_id.value:
-
-                    ui.notify(
-                        'لم يتم تحديد الفريق',
-                        color='warning'
-                    )
-
-                    return
-
-                try:
-
-                    db.execute_query(
-                        """
-                        DELETE FROM Team
-                        WHERE Id = ?
-                        AND Clubid = ?
-                        """,
-                        (
-                            int(delete_team_id.value),
-                            club_id
-                        )
-                    )
-
-                    ui.notify(
-                        'تم حذف الفريق بنجاح',
-                        color='positive'
-                    )
-
-                    delete_dialog.close()
-
-                    refresh_teams_table()
-
-                except Exception as e:
-
-                    ui.notify(
-                        'لا يمكن حذف الفريق حالياً',
-                        color='negative'
-                    )
-
-                    print(
-                        f'[DELETE TEAM ERROR] {type(e).__name__}: {e}'
-                    )
-
-            delete_button.on(
-                'click',
-                delete_team
-            )
-
-            # =================================================
-            # INITIAL LOAD
-            # =================================================
-
-            refresh_teams_table()
+                                        ui.label(t_name).classes('team-name')
+                                        if team['TeamEN']:
+                                            ui.label(team['TeamEN']).classes(
+                                                'text-xs text-slate-300'
+                                            )
+
+                                        with ui.row().classes(
+                                            'gap-2 mt-4 flex-wrap'
+                                        ):
+                                            with ui.element('div').classes(
+                                                'team-meta category'
+                                            ):
+                                                ui.icon('category').classes(
+                                                    'text-xs'
+                                                )
+                                                ui.label(t_cat)
+                                            with ui.element('div').classes(
+                                                'team-meta sport'
+                                            ):
+                                                ui.icon('sports').classes(
+                                                    'text-xs'
+                                                )
+                                                ui.label(t_sport)
+
+            # Initial load
+            refresh_teams()
